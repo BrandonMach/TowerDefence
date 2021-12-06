@@ -11,7 +11,7 @@ namespace TowerDefence
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        public SimplePath simplePath;
+        //public SimplePath simplePath;
         float moveUpSpline;
         float t;
 
@@ -37,10 +37,13 @@ namespace TowerDefence
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
-            simplePath = new SimplePath(GraphicsDevice);
+             //simplePath = new SimplePath(GraphicsDevice);
             _graphics.PreferredBackBufferWidth = 1900;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
+
+            SplineManager.LoadSpline(GraphicsDevice, Window);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -51,14 +54,14 @@ namespace TowerDefence
             // TODO: Add your update logic here
             moveUpSpline += 5;
 
-            monkeyPos = simplePath.GetPos(simplePath.beginT + moveUpSpline); // start of spline + ökar t med moveUpSline
-            Debug.WriteLine(simplePath.endT);
-            if (moveUpSpline >= simplePath.endT)
+            monkeyPos = SplineManager.simplePath.GetPos(SplineManager.simplePath.beginT + moveUpSpline); // start of spline + ökar t med moveUpSline
+            Debug.WriteLine(SplineManager.simplePath.endT);
+            if (moveUpSpline >= SplineManager.simplePath.endT)
             {
                 Debug.WriteLine("end");
 
             }
-            simplePath.AddPoint(new Vector2(30, 10));
+           
 
             base.Update(gameTime);
         }
@@ -69,9 +72,9 @@ namespace TowerDefence
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            simplePath.Draw(_spriteBatch);
-            simplePath.DrawPoints(_spriteBatch);
-            if (!(moveUpSpline >= simplePath.endT))
+            SplineManager.simplePath.Draw(_spriteBatch);
+            SplineManager.simplePath.DrawPoints(_spriteBatch);
+            if (!(moveUpSpline >= SplineManager.simplePath.endT))
             {
                 Debug.WriteLine("end");
                 _spriteBatch.Draw(SpriteManager.bloonsMonkey, monkeyPos, null, Color.White, 0f, new Vector2(SpriteManager.bloonsMonkey.Width / 2, SpriteManager.bloonsMonkey.Height / 2), 1f, SpriteEffects.None, 1f);
