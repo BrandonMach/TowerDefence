@@ -15,6 +15,8 @@ namespace TowerDefence
         GameObject gameObject;
         List<GameObject> goList; 
 
+        
+
         //public SimplePath simplePath;
         float monkeyPos; // move up the spline
         float t;
@@ -55,7 +57,7 @@ namespace TowerDefence
             gameObject = new GameObject(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
 
 
-            renderTarget = new RenderTarget2D(GraphicsDevice, Window.ClientBounds.Width, Window.ClientBounds.Height);
+            renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width, Window.ClientBounds.Height);
             DrawOnRenderTarget();
 
 
@@ -65,7 +67,7 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            DrawOnRenderTarget(); ///dasdadasad
+           
             // TODO: Add your update logic here
             monkeyPos += 5;
             gameObject.Update();
@@ -81,10 +83,10 @@ namespace TowerDefence
                     Debug.WriteLine("placed");
                 }
             }
+            Debug.WriteLine(goList.Count);
 
-           
 
-
+            DrawOnRenderTarget(); ///dasdadasad
             base.Update(gameTime);
         }
 
@@ -108,17 +110,23 @@ namespace TowerDefence
             GraphicsDevice.Clear(Color.Transparent);
             _spriteBatch.Begin();
 
-            //_spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, Color.White);
-            SplineManager.simplePath.Draw(_spriteBatch);
-            SplineManager.simplePath.DrawPoints(_spriteBatch);
-            if (!(monkeyPos >= SplineManager.simplePath.endT))
-            {
-                
-                _spriteBatch.Draw(SpriteManager.BloonsMonkeyTex, SplineManager.simplePath.GetPos(monkeyPos), null, Color.White, 0f, new Vector2(SpriteManager.BloonsMonkeyTex.Width / 2, SpriteManager.BloonsMonkeyTex.Height / 2), 1f, SpriteEffects.None, 1f);
-               
-            }
+            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, Color.White); //Color transparent
+
+            //SplineManager.simplePath.Draw(_spriteBatch);
+            //SplineManager.simplePath.DrawPoints(_spriteBatch);
+            //if (!(monkeyPos >= SplineManager.simplePath.endT))
+            //{
+
+            //    _spriteBatch.Draw(SpriteManager.BloonsMonkeyTex, SplineManager.simplePath.GetPos(monkeyPos), null, Color.White, 0f, new Vector2(SpriteManager.BloonsMonkeyTex.Width / 2, SpriteManager.BloonsMonkeyTex.Height / 2), 1f, SpriteEffects.None, 1f);
+
+            //}
 
             gameObject.Draw(_spriteBatch);
+
+            foreach (GameObject go in goList)
+            {
+                go.Draw(_spriteBatch);
+            }
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
           
@@ -132,8 +140,11 @@ namespace TowerDefence
             renderTarget.GetData(0, g.hitbox, pixels, 0, pixels.Length);
             for (int i = 0; i < pixels.Length; ++i)
             {
-                if (pixels[i].A > 0.0f && pixels2[i].A > 0.0f)
+                if (pixels[i].A > 0.0f && pixels2[i].A > 0.0f) 
+                {
                     return false;
+                }
+                    
             }
             return true;
         }
