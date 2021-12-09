@@ -11,12 +11,12 @@ namespace TowerDefence
     class SpriteManager
     {
         
-            public static Texture2D bloonsMonkey;
+            public static Texture2D BloonsMonkeyTex { get; private set; }
 
 
             public static void LoadSprites(ContentManager Content)
             {
-                bloonsMonkey = Content.Load<Texture2D>("bloonsMonkey");
+                BloonsMonkeyTex = Content.Load<Texture2D>("bloonsMonkey");
             }
         
     }
