@@ -19,6 +19,14 @@ namespace TowerDefence
             this.hitbox = HitBox;
         }
 
+        public void Update()
+        {
+
+
+
+            pos.X = Mouse.GetState().X;
+            pos.Y = Mouse.GetState().Y;
+        }
 
 
 
@@ -27,7 +35,7 @@ namespace TowerDefence
 
         public void Draw(SpriteBatch _spriteBatch)
         {
-            _spriteBatch.Draw(texture, pos, Color.White);
+            _spriteBatch.Draw(texture, pos, null ,Color.White,0f,new Vector2(texture.Width/2,texture.Height/2),1f,SpriteEffects.None,1f);
         }
     }
 }

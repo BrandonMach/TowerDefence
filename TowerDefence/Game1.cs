@@ -13,7 +13,7 @@ namespace TowerDefence
         private SpriteBatch _spriteBatch;
         RenderTarget2D renderTarget;
         GameObject gameObject;
-        List<GameObject> go; 
+        List<GameObject> goList; 
 
         //public SimplePath simplePath;
         float monkeyPos; // move up the spline
@@ -46,12 +46,15 @@ namespace TowerDefence
             _graphics.ApplyChanges();
 
            
-            //go = new List<GameObjects>();
+            goList = new List<GameObject>();
 
-          
+            
             
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
+            gameObject = new GameObject(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
+
+
             renderTarget = new RenderTarget2D(GraphicsDevice, Window.ClientBounds.Width, Window.ClientBounds.Height);
             DrawOnRenderTarget();
 
@@ -65,7 +68,22 @@ namespace TowerDefence
             DrawOnRenderTarget(); ///dasdadasad
             // TODO: Add your update logic here
             monkeyPos += 5;
+            gameObject.Update();
+            KeyMouseReader.Update();
+
+
+            if (KeyMouseReader.LeftClick())
+            {
+                Debug.WriteLine("clicked");
+                if (CanPlace(gameObject))
+                {
+                    goList.Add(gameObject);
+                    Debug.WriteLine("placed");
+                }
+            }
+
            
+
 
             base.Update(gameTime);
         }
@@ -100,6 +118,7 @@ namespace TowerDefence
                
             }
 
+            gameObject.Draw(_spriteBatch);
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
           
