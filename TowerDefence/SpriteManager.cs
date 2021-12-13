@@ -13,12 +13,17 @@ namespace TowerDefence
         
             public static Texture2D BloonsMonkeyTex { get; private set; }
             public static Texture2D BackgroundTex { get; private set; }
+            public static Texture2D TrojanTex { get; private set; }
+            
+            public static Texture2D BallTex { get; private set; }
 
 
             public static void LoadSprites(ContentManager Content)
             {
                 BloonsMonkeyTex = Content.Load<Texture2D>("bloonsMonkey");
-            BackgroundTex = Content.Load<Texture2D>("transparentSquareBackground");
+                BackgroundTex = Content.Load<Texture2D>("wd95");
+                TrojanTex = Content.Load<Texture2D>("trojanHorse");
+                BallTex = Content.Load<Texture2D>("ball");
             }
         
     }

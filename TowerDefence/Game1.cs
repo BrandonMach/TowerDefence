@@ -42,9 +42,9 @@ namespace TowerDefence
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
-             //simplePath = new SimplePath(GraphicsDevice);
-            _graphics.PreferredBackBufferWidth = 1900;
-            _graphics.PreferredBackBufferHeight = 1000;
+            //simplePath = new SimplePath(GraphicsDevice);
+            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width * 2;
+            _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height * 2;
             _graphics.ApplyChanges();
 
            
@@ -79,7 +79,11 @@ namespace TowerDefence
                 Debug.WriteLine("clicked");
                 if (CanPlace(gameObject))
                 {
-                    goList.Add(gameObject);
+                    Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+
+                    
+
+                    goList.Add(new GameObject(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width/2, (int)newPosition.Y- SpriteManager.BloonsMonkeyTex.Height/2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height)));
                     Debug.WriteLine("placed");
                 }
             }
@@ -96,8 +100,10 @@ namespace TowerDefence
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
+            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null,Color.White,0f, Vector2.Zero,2f, SpriteEffects.None,1f);
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+            
+            gameObject.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -106,22 +112,26 @@ namespace TowerDefence
 
         private void DrawOnRenderTarget()
         {
+
+
             GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             _spriteBatch.Begin();
 
-            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, Color.White); //Color transparent
+           
 
-            //SplineManager.simplePath.Draw(_spriteBatch);
-            //SplineManager.simplePath.DrawPoints(_spriteBatch);
-            //if (!(monkeyPos >= SplineManager.simplePath.endT))
-            //{
 
-            //    _spriteBatch.Draw(SpriteManager.BloonsMonkeyTex, SplineManager.simplePath.GetPos(monkeyPos), null, Color.White, 0f, new Vector2(SpriteManager.BloonsMonkeyTex.Width / 2, SpriteManager.BloonsMonkeyTex.Height / 2), 1f, SpriteEffects.None, 1f);
+            // dnjasdhadasdnjasdjsan
+            SplineManager.simplePath.Draw(_spriteBatch);
+            SplineManager.simplePath.DrawPoints(_spriteBatch);
+            if (!(monkeyPos >= SplineManager.simplePath.endT))
+            {
 
-            //}
+                _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(monkeyPos), null, Color.White, 0f, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
 
-            gameObject.Draw(_spriteBatch);
+            }
+
+
 
             foreach (GameObject go in goList)
             {
