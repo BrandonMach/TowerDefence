@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Spline;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -18,8 +19,9 @@ namespace TowerDefence
         
 
         //public SimplePath simplePath;
-        float monkeyPos; // move up the spline
-        float t;
+        float enemyPos; // move up the spline
+        float nextEnemyPos;
+        float enemyRotation;
         
 
         public Game1()
@@ -69,7 +71,10 @@ namespace TowerDefence
                 Exit();
            
             // TODO: Add your update logic here
-            monkeyPos += 5;
+            enemyPos += 5;
+            nextEnemyPos = enemyPos + 1;
+            enemyRotation = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextEnemyPos).Y - SplineManager.simplePath.GetPos(enemyPos).Y, SplineManager.simplePath.GetPos(nextEnemyPos).X - SplineManager.simplePath.GetPos(enemyPos).X);
+
             gameObject.Update();
             KeyMouseReader.Update();
 
@@ -124,10 +129,12 @@ namespace TowerDefence
             // dnjasdhadasdnjasdjsan
             SplineManager.simplePath.Draw(_spriteBatch);
             SplineManager.simplePath.DrawPoints(_spriteBatch);
-            if (!(monkeyPos >= SplineManager.simplePath.endT))
+            if (!(enemyPos >= SplineManager.simplePath.endT))
             {
 
-                _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(monkeyPos), null, Color.White, 0f, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
+
+
+                _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemyPos), null, Color.White,enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
 
             }
 
