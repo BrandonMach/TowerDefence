@@ -45,21 +45,24 @@ namespace TowerDefence
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
             //simplePath = new SimplePath(GraphicsDevice);
-            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width * 2;
-            _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height * 2;
+            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width ;
+            _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height;
             _graphics.ApplyChanges();
 
            
             goList = new List<GameObject>();
 
-            
-            
+            Debug.WriteLine(Window.ClientBounds.Width);
+            Debug.WriteLine(Window.ClientBounds.Height);
+            Debug.WriteLine(SpriteManager.BackgroundTex.Width);
+            Debug.WriteLine(SpriteManager.BackgroundTex.Height);
+
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             gameObject = new GameObject(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
 
 
-            renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width, Window.ClientBounds.Height);
+            renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
             DrawOnRenderTarget();
 
 
@@ -69,15 +72,17 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-           
+
+        
+
             // TODO: Add your update logic here
             enemyPos += 5;
             nextEnemyPos = enemyPos + 1;
             enemyRotation = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextEnemyPos).Y - SplineManager.simplePath.GetPos(enemyPos).Y, SplineManager.simplePath.GetPos(nextEnemyPos).X - SplineManager.simplePath.GetPos(enemyPos).X);
-
-            gameObject.Update();
+            
+           
             KeyMouseReader.Update();
-
+            gameObject.Update();
 
             if (KeyMouseReader.LeftClick())
             {
@@ -105,7 +110,7 @@ namespace TowerDefence
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null,Color.White,0f, Vector2.Zero,2f, SpriteEffects.None,1f);
+            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null,Color.White,0f, Vector2.Zero,1f, SpriteEffects.None,1f);
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
             
             gameObject.Draw(_spriteBatch);
