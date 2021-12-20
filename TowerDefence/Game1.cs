@@ -10,11 +10,23 @@ namespace TowerDefence
 {
     public class Game1 : Game
     {
+
+        enum TowerSelect
+        {
+            None,
+            Avast,
+            Monkey, 
+        }
+        TowerSelect currentTowerSelected;
+
+
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         RenderTarget2D renderTarget;
         GameObject gameObject;
-        List<GameObject> goList; 
+        Towers towers;
+        List<GameObject> towersList; 
 
         
 
@@ -50,7 +62,7 @@ namespace TowerDefence
             _graphics.ApplyChanges();
 
            
-            goList = new List<GameObject>();
+            towersList = new List<GameObject>();
 
             Debug.WriteLine(Window.ClientBounds.Width);
             Debug.WriteLine(Window.ClientBounds.Height);
@@ -58,8 +70,10 @@ namespace TowerDefence
             Debug.WriteLine(SpriteManager.BackgroundTex.Height);
 
 
+            currentTowerSelected = TowerSelect.None;
+
             SplineManager.LoadSpline(GraphicsDevice, Window);
-            gameObject = new GameObject(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
+            towers = new Towers(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
 
 
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
@@ -82,22 +96,46 @@ namespace TowerDefence
             
            
             KeyMouseReader.Update();
-            gameObject.Update();
-
-            if (KeyMouseReader.LeftClick())
+            //gameObject.Update();
+           
+            if (KeyMouseReader.KeyPressed(Keys.D1))
             {
-                Debug.WriteLine("clicked");
-                if (CanPlace(gameObject))
-                {
-                    Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-
-                    
-
-                    goList.Add(new GameObject(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width/2, (int)newPosition.Y- SpriteManager.BloonsMonkeyTex.Height/2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height)));
-                    Debug.WriteLine("placed");
-                }
+                currentTowerSelected = TowerSelect.Avast;
+                
             }
-            Debug.WriteLine(goList.Count);
+
+
+
+
+            switch (currentTowerSelected)
+            {
+                case TowerSelect.None:
+                    break;
+                case TowerSelect.Avast:
+
+                    towers.Update();
+                    //för alla gameobjects bredd och höjd i Mouse.GetState()
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + towers.texture.Width / 2 && Mouse.GetState().Y > 0 + towers.texture.Height / 2)
+                    {
+                        Debug.WriteLine("clicked");
+                        if (CanPlace(towers))
+                        {
+                            Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+
+
+
+                            towersList.Add(new Towers(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height)));
+                            Debug.WriteLine("placed");
+                        }
+                    }
+                    Debug.WriteLine(towersList.Count);
+                    break;
+                case TowerSelect.Monkey:
+                    break;
+                default:
+                    break;
+            }
+         
 
 
             DrawOnRenderTarget(); ///dasdadasad
@@ -111,9 +149,24 @@ namespace TowerDefence
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null,Color.White,0f, Vector2.Zero,1f, SpriteEffects.None,1f);
-            _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(renderTarget, Vector2.Zero,Color.White);
+
+
+
+            switch (currentTowerSelected)
+            {
+                case TowerSelect.None:
+                    break;
+                case TowerSelect.Avast:
+                    //gameObject.Draw(_spriteBatch);
+                    towers.Draw(_spriteBatch);
+                    break;
+                case TowerSelect.Monkey:
+                    break;
+                default:
+                    break;
+            }
             
-            gameObject.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
@@ -145,16 +198,16 @@ namespace TowerDefence
 
 
 
-            foreach (GameObject go in goList)
+            foreach (Towers twrs in towersList)
             {
-                go.Draw(_spriteBatch);
+                twrs.Draw(_spriteBatch);
             }
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
           
         }
 
-        public bool CanPlace(GameObject g)
+        public bool CanPlace(Towers g)
         {
             Color[] pixels = new Color[g.texture.Width * g.texture.Height];
             Color[] pixels2 = new Color[g.texture.Width * g.texture.Height];
