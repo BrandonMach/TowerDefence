@@ -122,13 +122,13 @@ namespace TowerDefence
                 Debug.WriteLine(enemyList.Count);
             }
 
-            //if (KeyMouseReader.KeyPressed(Keys.S))
-            //{
-            //    foreach (Enemys enemys in enemyList)
-            //    {
-            //        enemys.positionFloat += 10;
-            //    }
-            //}
+            if (KeyMouseReader.KeyPressed(Keys.S)) //Speed up enemys
+            {
+                foreach (Enemys enemys in enemyList)
+                {
+                    enemys.speed += 3;
+                }
+            }
             foreach (Enemys enemys in enemyList)
             {
                 enemys.Update();

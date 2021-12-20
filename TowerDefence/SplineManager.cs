@@ -35,8 +35,9 @@ namespace TowerDefence
             simplePath.AddPoint(new Vector2(1820, 600));
             simplePath.AddPoint( new Vector2(900, 800));
             simplePath.AddPoint( new Vector2(80, 1000));
-            simplePath.AddPoint( new Vector2(200, 1020));
-            simplePath.AddPoint(new Vector2(700, 920));
+            simplePath.AddPoint( new Vector2(100, 1020));
+            simplePath.AddPoint( new Vector2(240, 1020));
+            simplePath.AddPoint(new Vector2(700, 1020));
 
 
 
