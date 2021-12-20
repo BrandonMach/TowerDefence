@@ -27,8 +27,10 @@ namespace TowerDefence
         GameObject gameObject;
         Towers avastSelected;
         Towers monkeySelected;
-        List<GameObject> towersList; 
+        List<GameObject> towersList;
 
+        Enemys enemys;
+        List<Enemys> enemyList;
         
 
         //public SimplePath simplePath;
@@ -64,6 +66,7 @@ namespace TowerDefence
 
            
             towersList = new List<GameObject>();
+            enemyList = new List<Enemys>();
 
             Debug.WriteLine(Window.ClientBounds.Width);
             Debug.WriteLine(Window.ClientBounds.Height);
@@ -76,6 +79,7 @@ namespace TowerDefence
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
             monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
+            
 
 
 
@@ -111,6 +115,25 @@ namespace TowerDefence
                 currentTowerSelected = TowerSelect.Monkey;
                 
             }
+            else if (KeyMouseReader.KeyPressed(Keys.L))
+            {
+                enemys = new Enemys(SpriteManager.TrojanTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.TrojanTex.Width, SpriteManager.TrojanTex.Height));
+                enemyList.Add(enemys);
+                Debug.WriteLine(enemyList.Count);
+            }
+
+            //if (KeyMouseReader.KeyPressed(Keys.S))
+            //{
+            //    foreach (Enemys enemys in enemyList)
+            //    {
+            //        enemys.positionFloat += 10;
+            //    }
+            //}
+            foreach (Enemys enemys in enemyList)
+            {
+                enemys.Update();
+            }
+
 
 
 
@@ -212,14 +235,18 @@ namespace TowerDefence
             // dnjasdhadasdnjasdjsan
             SplineManager.simplePath.Draw(_spriteBatch);
             SplineManager.simplePath.DrawPoints(_spriteBatch);
-            if (!(enemyPos >= SplineManager.simplePath.endT))
+
+            foreach (Enemys enemys in enemyList)
             {
+                if (!(enemys.positionFloat >= SplineManager.simplePath.endT))
+                {
 
+                    enemys.Draw(_spriteBatch);
+                   // _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemys.positionFloat), null, Color.White, enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
 
-
-                _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemyPos), null, Color.White,enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
-
+                }
             }
+          
 
 
 
