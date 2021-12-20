@@ -25,7 +25,8 @@ namespace TowerDefence
         private SpriteBatch _spriteBatch;
         RenderTarget2D renderTarget;
         GameObject gameObject;
-        Towers towers;
+        Towers avastSelected;
+        Towers monkeySelected;
         List<GameObject> towersList; 
 
         
@@ -73,7 +74,9 @@ namespace TowerDefence
             currentTowerSelected = TowerSelect.None;
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
-            towers = new Towers(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
+            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
+            monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
+
 
 
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
@@ -103,6 +106,11 @@ namespace TowerDefence
                 currentTowerSelected = TowerSelect.Avast;
                 
             }
+            else if (KeyMouseReader.KeyPressed(Keys.D2))
+            {
+                currentTowerSelected = TowerSelect.Monkey;
+                
+            }
 
 
 
@@ -113,24 +121,40 @@ namespace TowerDefence
                     break;
                 case TowerSelect.Avast:
 
-                    towers.Update();
+                    avastSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + towers.texture.Width / 2 && Mouse.GetState().Y > 0 + towers.texture.Height / 2)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2)
                     {
                         Debug.WriteLine("clicked");
-                        if (CanPlace(towers))
+                        if (CanPlace(avastSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
 
 
-                            towersList.Add(new Towers(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height)));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height)));
                             Debug.WriteLine("placed");
                         }
                     }
                     Debug.WriteLine(towersList.Count);
                     break;
                 case TowerSelect.Monkey:
+                    monkeySelected.Update();
+                    //för alla gameobjects bredd och höjd i Mouse.GetState()
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2)
+                    {
+                        Debug.WriteLine("clicked");
+                        if (CanPlace(monkeySelected))
+                        {
+                            Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+
+
+
+                            towersList.Add(new AvastTower(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height)));
+                            Debug.WriteLine("placed");
+                        }
+                    }
+                    Debug.WriteLine(towersList.Count);
                     break;
                 default:
                     break;
@@ -159,9 +183,10 @@ namespace TowerDefence
                     break;
                 case TowerSelect.Avast:
                     //gameObject.Draw(_spriteBatch);
-                    towers.Draw(_spriteBatch);
+                    avastSelected.Draw(_spriteBatch);
                     break;
                 case TowerSelect.Monkey:
+                    monkeySelected.Draw(_spriteBatch);
                     break;
                 default:
                     break;
