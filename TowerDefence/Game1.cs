@@ -11,6 +11,13 @@ namespace TowerDefence
 {
     public class Game1 : Game
     {
+        enum GameState
+        {
+            StartMenu,
+            Game,
+            End,
+        }
+        GameState currentGameState;
 
         enum TowerSelect
         {
@@ -80,8 +87,9 @@ namespace TowerDefence
             Debug.WriteLine(SpriteManager.BackgroundTex.Width);
             Debug.WriteLine(SpriteManager.BackgroundTex.Height);
 
-
+            currentGameState = GameState.StartMenu;
             currentTowerSelected = TowerSelect.None;
+
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
@@ -101,26 +109,53 @@ namespace TowerDefence
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-        
+            switch (currentGameState)
+            {
+                case GameState.StartMenu:
+                    if (myForm1.PlayerName != "")
+                    {
+                        Window.Title = myForm1.PlayerName;
+                        currentGameState = GameState.Game;
+                    }
+                    break;
+                case GameState.Game:
+                    GameUpdate(gameTime);
+                    break;
+                case GameState.End:
+                    break;
+                default:
+                    break;
+            }
+
+
+            base.Update(gameTime);
+        }
+
+
+        public void GameUpdate(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
 
             // TODO: Add your update logic here
             enemyPos += 5;
             nextEnemyPos = enemyPos + 1;
             enemyRotation = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextEnemyPos).Y - SplineManager.simplePath.GetPos(enemyPos).Y, SplineManager.simplePath.GetPos(nextEnemyPos).X - SplineManager.simplePath.GetPos(enemyPos).X);
-            
-           
+
+
             KeyMouseReader.Update();
             //gameObject.Update();
-           
+
             if (KeyMouseReader.KeyPressed(Keys.D1))
             {
                 currentTowerSelected = TowerSelect.Avast;
-                
+
             }
             else if (KeyMouseReader.KeyPressed(Keys.D2))
             {
                 currentTowerSelected = TowerSelect.Monkey;
-                
+
             }
             else if (KeyMouseReader.KeyPressed(Keys.L))
             {
@@ -189,11 +224,10 @@ namespace TowerDefence
                 default:
                     break;
             }
-         
+
 
 
             DrawOnRenderTarget(); ///dasdadasad
-            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -202,10 +236,35 @@ namespace TowerDefence
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null,Color.White,0f, Vector2.Zero,1f, SpriteEffects.None,1f);
-            _spriteBatch.Draw(renderTarget, Vector2.Zero,Color.White);
 
 
+
+            switch (currentGameState)
+            {
+                case GameState.StartMenu:
+
+                    break;
+                case GameState.Game:
+                    GameDraw(gameTime);
+                    break;
+                case GameState.End:
+                    break;
+                default:
+                    break;
+            }
+
+
+           
+
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+        public void GameDraw(GameTime gameTime)
+        {
+            _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+            _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
 
             switch (currentTowerSelected)
             {
@@ -214,18 +273,18 @@ namespace TowerDefence
                 case TowerSelect.Avast:
                     //gameObject.Draw(_spriteBatch);
                     avastSelected.Draw(_spriteBatch);
+
+
                     break;
                 case TowerSelect.Monkey:
                     monkeySelected.Draw(_spriteBatch);
+
+
                     break;
                 default:
                     break;
             }
-            
 
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
         }
 
         private void DrawOnRenderTarget()
@@ -239,7 +298,7 @@ namespace TowerDefence
            
 
 
-            // dnjasdhadasdnjasdjsan
+            // Spine ritas ut i rendertarget
             SplineManager.simplePath.Draw(_spriteBatch);
             SplineManager.simplePath.DrawPoints(_spriteBatch);
 
