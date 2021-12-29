@@ -5,6 +5,7 @@ using Spline;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using WinForm;
 
 namespace TowerDefence
 {
@@ -23,6 +24,9 @@ namespace TowerDefence
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        Form1 myForm1;
+
         RenderTarget2D renderTarget;
         GameObject gameObject;
         Towers avastSelected;
@@ -56,6 +60,9 @@ namespace TowerDefence
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            myForm1 = new Form1();
+            myForm1.Show();
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
