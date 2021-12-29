@@ -42,6 +42,7 @@ namespace TowerDefence
 
         Enemys enemys;
         List<Enemys> enemyList;
+        Color backgroundColor;
         
 
         //public SimplePath simplePath;
@@ -67,9 +68,9 @@ namespace TowerDefence
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            myForm1 = new Form1();
-            myForm1.Show();
+            backgroundColor = new Color(0, 128, 128);
+            
+         
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
@@ -89,7 +90,7 @@ namespace TowerDefence
 
             currentGameState = GameState.StartMenu;
             currentTowerSelected = TowerSelect.None;
-
+            myForm1 = new Form1();
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
@@ -108,10 +109,11 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            
             switch (currentGameState)
             {
                 case GameState.StartMenu:
+                   
                     if (myForm1.PlayerName != "")
                     {
                         Window.Title = myForm1.PlayerName;
@@ -232,7 +234,7 @@ namespace TowerDefence
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(backgroundColor);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
@@ -242,7 +244,7 @@ namespace TowerDefence
             switch (currentGameState)
             {
                 case GameState.StartMenu:
-
+                    myForm1.Show();
                     break;
                 case GameState.Game:
                     GameDraw(gameTime);
