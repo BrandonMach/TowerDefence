@@ -146,7 +146,7 @@ namespace TowerDefence
 
                     avastSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2)
                     {
                         Debug.WriteLine("clicked");
                         if (CanPlace(avastSelected))
@@ -164,7 +164,7 @@ namespace TowerDefence
                 case TowerSelect.Monkey:
                     monkeySelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - monkeySelected.texture.Width / 2)
                     {
                         Debug.WriteLine("clicked");
                         if (CanPlace(monkeySelected))
