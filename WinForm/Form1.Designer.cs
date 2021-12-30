@@ -1,7 +1,7 @@
 ﻿
 namespace WinForm
 {
-    partial class Form1
+    partial class NameMenu
     {
         /// <summary>
         ///  Required designer variable.
@@ -53,7 +53,7 @@ namespace WinForm
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Form1
+            // NameMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -62,7 +62,8 @@ namespace WinForm
             this.ClientSize = new System.Drawing.Size(1152, 348);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxName);
-            this.Name = "Form1";
+            this.Location = new System.Drawing.Point(100, 30);
+            this.Name = "NameMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

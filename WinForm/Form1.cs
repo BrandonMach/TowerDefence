@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace WinForm
 {
-    public partial class Form1 : Form
+    public partial class NameMenu : Form
     {
 
         public string PlayerName
@@ -18,7 +18,7 @@ namespace WinForm
             get;
             private set;
         }
-        public Form1()
+        public NameMenu()
         {
             InitializeComponent();
             PlayerName = "";

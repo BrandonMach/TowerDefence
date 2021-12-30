@@ -32,7 +32,7 @@ namespace TowerDefence
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        Form1 myForm1;
+        NameMenu myForm1;
 
         RenderTarget2D renderTarget;
         GameObject gameObject;
@@ -49,6 +49,8 @@ namespace TowerDefence
         float enemyPos; // move up the spline
         float nextEnemyPos;
         float enemyRotation;
+
+        public bool isPaused;
         
 
         public Game1()
@@ -90,7 +92,7 @@ namespace TowerDefence
 
             currentGameState = GameState.StartMenu;
             currentTowerSelected = TowerSelect.None;
-            myForm1 = new Form1();
+            myForm1 = new NameMenu();
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
@@ -109,21 +111,40 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+         
             switch (currentGameState)
             {
+                 
                 case GameState.StartMenu:
                    
                     if (myForm1.PlayerName != "")
                     {
-                        Window.Title = myForm1.PlayerName;
+                        Window.Title = "Player: " + myForm1.PlayerName;
                         currentGameState = GameState.Game;
+                        isPaused = false;
                     }
                     break;
                 case GameState.Game:
-                    GameUpdate(gameTime);
+                    
+                    if(!isPaused)
+                    {
+                        GameUpdate(gameTime);
+                    }
+                   
+                    if (KeyMouseReader.KeyPressed(Keys.M))
+                    {
+                        currentGameState = GameState.End;
+                        isPaused = true;
+                         
+                    }
                     break;
                 case GameState.End:
+                    KeyMouseReader.Update();
+                    if (KeyMouseReader.KeyPressed(Keys.O))
+                    {
+                        currentGameState = GameState.Game;
+                        isPaused = false;
+                    }
                     break;
                 default:
                     break;
