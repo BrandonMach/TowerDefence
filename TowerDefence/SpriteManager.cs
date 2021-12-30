@@ -16,6 +16,8 @@ namespace TowerDefence
             public static Texture2D TrojanTex { get; private set; }
             public static Texture2D BallTex { get; private set; }
             public static  Texture2D AvastTex { get; private set; }
+            
+            public static Texture2D PauseWindowTex { get; private set; }
 
 
             public static void LoadSprites(ContentManager Content)
@@ -25,6 +27,7 @@ namespace TowerDefence
                 TrojanTex = Content.Load<Texture2D>("trojanHorse");
                 BallTex = Content.Load<Texture2D>("ball");
                 AvastTex = Content.Load<Texture2D>("avastLogo");
+                PauseWindowTex = Content.Load<Texture2D>("pauseTD");
             }
         
     }

@@ -15,6 +15,7 @@ namespace TowerDefence
         {
             StartMenu,
             Game,
+            Pause,
             End,
         }
         GameState currentGameState;
@@ -109,7 +110,7 @@ namespace TowerDefence
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
          
             switch (currentGameState)
@@ -131,20 +132,22 @@ namespace TowerDefence
                         GameUpdate(gameTime);
                     }
                    
-                    if (KeyMouseReader.KeyPressed(Keys.M))
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
                     {
-                        currentGameState = GameState.End;
+                        currentGameState = GameState.Pause;
                         isPaused = true;
                          
                     }
                     break;
-                case GameState.End:
+                case GameState.Pause:
                     KeyMouseReader.Update();
-                    if (KeyMouseReader.KeyPressed(Keys.O))
+                    if (KeyMouseReader.KeyPressed(Keys.Escape))
                     {
                         currentGameState = GameState.Game;
                         isPaused = false;
                     }
+                    break;
+                case GameState.End:
                     break;
                 default:
                     break;
@@ -157,7 +160,7 @@ namespace TowerDefence
 
         public void GameUpdate(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
 
 
@@ -269,6 +272,10 @@ namespace TowerDefence
                     break;
                 case GameState.Game:
                     GameDraw(gameTime);
+                    break;
+                case GameState.Pause:
+                    GameDraw(gameTime);
+                    _spriteBatch.Draw(SpriteManager.PauseWindowTex, new Vector2(SpriteManager.PauseWindowTex.Width/2, SpriteManager.PauseWindowTex.Height), Color.White);
                     break;
                 case GameState.End:
                     break;
