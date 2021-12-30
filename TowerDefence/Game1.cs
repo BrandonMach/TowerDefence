@@ -50,6 +50,7 @@ namespace TowerDefence
         float enemyPos; // move up the spline
         float nextEnemyPos;
         float enemyRotation;
+        float roadBallPos;
 
         public bool isPaused;
         
@@ -98,7 +99,8 @@ namespace TowerDefence
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
             monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
-            
+
+            roadBallPos = SplineManager.simplePath.beginT;
 
 
 
@@ -203,6 +205,8 @@ namespace TowerDefence
             }
 
 
+            
+
 
 
 
@@ -294,7 +298,10 @@ namespace TowerDefence
         public void GameDraw(GameTime gameTime)
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+
+          
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+
 
             switch (currentTowerSelected)
             {
@@ -325,7 +332,13 @@ namespace TowerDefence
             GraphicsDevice.Clear(Color.Transparent);
             _spriteBatch.Begin();
 
-           
+
+            //RoadTexture
+            for (int i = 0; i < SplineManager.simplePath.endT; i += 10)
+            {
+                Vector2 roadBallVector = SplineManager.simplePath.GetPos(roadBallPos + i);
+                _spriteBatch.Draw(SpriteManager.RoadTex, roadBallVector, null, Color.White, 0f, new Vector2(SpriteManager.RoadTex.Width / 2, SpriteManager.RoadTex.Height / 2), 1f, SpriteEffects.None, 0f);
+            }
 
 
             // Spine ritas ut i rendertarget

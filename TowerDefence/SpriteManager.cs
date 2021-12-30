@@ -18,9 +18,10 @@ namespace TowerDefence
             public static  Texture2D AvastTex { get; private set; }
             
             public static Texture2D PauseWindowTex { get; private set; }
+            public static Texture2D RoadTex { get; private set; }
 
 
-            public static void LoadSprites(ContentManager Content)
+        public static void LoadSprites(ContentManager Content)
             {
                 BloonsMonkeyTex = Content.Load<Texture2D>("bloonsMonkey");
                 BackgroundTex = Content.Load<Texture2D>("wd95");
@@ -28,6 +29,7 @@ namespace TowerDefence
                 BallTex = Content.Load<Texture2D>("ball");
                 AvastTex = Content.Load<Texture2D>("avastLogo");
                 PauseWindowTex = Content.Load<Texture2D>("pauseTD");
+                RoadTex = Content.Load<Texture2D>("martixCode");
             }
         
     }
