@@ -29,7 +29,7 @@ namespace TowerDefence
                 BallTex = Content.Load<Texture2D>("ball");
                 AvastTex = Content.Load<Texture2D>("avastLogo");
                 PauseWindowTex = Content.Load<Texture2D>("pauseTD");
-                RoadTex = Content.Load<Texture2D>("martixCode");
+                RoadTex = Content.Load<Texture2D>("road");
             }
         
     }

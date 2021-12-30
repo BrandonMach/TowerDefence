@@ -334,16 +334,16 @@ namespace TowerDefence
 
 
             //RoadTexture
-            for (int i = 0; i < SplineManager.simplePath.endT; i += 10)
-            {
-                Vector2 roadBallVector = SplineManager.simplePath.GetPos(roadBallPos + i);
-                _spriteBatch.Draw(SpriteManager.RoadTex, roadBallVector, null, Color.White, 0f, new Vector2(SpriteManager.RoadTex.Width / 2, SpriteManager.RoadTex.Height / 2), 1f, SpriteEffects.None, 0f);
-            }
+            //for (int i = 0; i < SplineManager.simplePath.endT; i += 10)
+            //{
+            //    Vector2 roadBallVector = SplineManager.simplePath.GetPos(roadBallPos + i);
+            //    _spriteBatch.Draw(SpriteManager.RoadTex, roadBallVector, null, new Color(0, 204, 0, 1), 0f, new Vector2(SpriteManager.RoadTex.Width / 2, SpriteManager.RoadTex.Height / 2), 1f, SpriteEffects.None, 0f);
+            //}
 
 
             // Spine ritas ut i rendertarget
             SplineManager.simplePath.Draw(_spriteBatch);
-            SplineManager.simplePath.DrawPoints(_spriteBatch);
+            //SplineManager.simplePath.DrawPoints(_spriteBatch);
 
             foreach (Enemys enemys in enemyList)
             {
