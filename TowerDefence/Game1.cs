@@ -205,8 +205,8 @@ namespace TowerDefence
             }
 
 
-            
-
+            //How many enemys alive
+            Debug.WriteLine(enemyList.Count);
 
 
 
@@ -351,8 +351,15 @@ namespace TowerDefence
                 {
 
                     enemys.Draw(_spriteBatch);
+                   
                    // _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemys.positionFloat), null, Color.White, enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
 
+                }
+                else
+                {
+                    enemyList.Remove(enemys);
+                    break;
+                    
                 }
             }
           
