@@ -227,7 +227,7 @@ namespace TowerDefence
 
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),3));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),5));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -321,9 +321,16 @@ namespace TowerDefence
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
-          
+            foreach (Towers towers in towersList)
+            {
+                _spriteBatch.Draw(SpriteManager.BallTex, towers.pos, null, Color.Red, 1f, new Vector2(towers.texture.Width / 2, towers.texture.Height / 2), towers.rad, SpriteEffects.None, 1f);
+            }
+
+            _spriteBatch.Draw(SpriteManager.BallTex, new Vector2(500,500), null, Color.Red, 1f, Vector2.Zero, 5, SpriteEffects.None, 1f);
+
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
 
+           
 
             switch (currentTowerSelected)
             {
