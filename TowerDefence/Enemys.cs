@@ -10,6 +10,7 @@ namespace TowerDefence
 {
     public class Enemys:GameObject
     {
+        public Vector2 positionV2;
         public float positionFloat;
         float nextFloatPosition;
         float rotation;
@@ -23,7 +24,7 @@ namespace TowerDefence
         {
 
             speed = 3;
-            enemyHp = 100;
+            enemyHp = 10;
             alive = true;
         }
 
@@ -33,6 +34,7 @@ namespace TowerDefence
             nextFloatPosition = positionFloat + 1;
             rotation  = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextFloatPosition).Y - SplineManager.simplePath.GetPos(positionFloat).Y, SplineManager.simplePath.GetPos(nextFloatPosition).X - SplineManager.simplePath.GetPos(positionFloat).X);
             hitbox = new Rectangle((int)SplineManager.simplePath.GetPos(positionFloat).X - texture.Width / 2, (int)SplineManager.simplePath.GetPos(positionFloat).Y - texture.Height / 2, texture.Width, texture.Width);
+            positionV2 = new Vector2((int)SplineManager.simplePath.GetPos(positionFloat).X - texture.Width / 2, (int)SplineManager.simplePath.GetPos(positionFloat).Y - texture.Height / 2);
             rad = hitbox.Width / 2;
 
 

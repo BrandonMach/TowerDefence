@@ -29,7 +29,7 @@ namespace TowerDefence
 
         public bool EnemyInRange(Enemys other)
         {
-            return Vector2.Distance(pos, other.pos) < (rad + other.rad);
+            return Vector2.Distance(pos, other.positionV2) < (rad + other.rad);
 
         }
 

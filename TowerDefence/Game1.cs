@@ -261,15 +261,15 @@ namespace TowerDefence
                 {
                     if (towers.hitbox.Intersects(enemys.hitbox))
                     {
-                        Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
-                        Debug.WriteLine("Enemy in range");
-                        enemys.enemyHp--;
-                        break;
-                       
-                        //if (towers.EnemyInRange(enemys) == true)
-                        //{
-                           
-                        //}
+                        if (towers.EnemyInRange(enemys) == true)
+                        {
+
+                            Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
+                            Debug.WriteLine("Enemy in range");
+                            enemys.enemyHp--;
+                            break;
+
+                        }
                     }
 
                    
