@@ -9,20 +9,24 @@ namespace TowerDefence
 {
     public class AvastTower: Towers
     {
+        
 
-
-        public AvastTower(Texture2D texture, Vector2 position, Rectangle HitBox) : base(texture, position, HitBox)
+        public AvastTower(Texture2D texture, Vector2 position, Rectangle HitBox, float rad) : base(texture, position, HitBox, rad)
         {
-
+            rad = 3;
         }
 
         public override void Update()
         {
+
             base.Update();
         }
 
+     
+
         public override void Draw(SpriteBatch _spriteBatch)
         {
+
             base.Draw(_spriteBatch);
         }
 

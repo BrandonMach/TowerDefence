@@ -97,8 +97,8 @@ namespace TowerDefence
             myForm1 = new NameMenu();
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
-            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height));
-            monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height));
+            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3);
+            monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height), 5);
 
             roadBallPos = SplineManager.simplePath.beginT;
 
@@ -227,7 +227,7 @@ namespace TowerDefence
 
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height)));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),3));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -244,8 +244,8 @@ namespace TowerDefence
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
 
-
-                            towersList.Add(new AvastTower(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height)));
+                            //dadakdnandjadadnadad
+                            towersList.Add(new Towers(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height),5));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -253,6 +253,28 @@ namespace TowerDefence
                     break;
                 default:
                     break;
+            }
+
+            foreach (Towers towers in towersList)
+            {
+                foreach (Enemys enemys in enemyList)
+                {
+                    if (towers.hitbox.Intersects(enemys.hitbox))
+                    {
+                        Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
+                        Debug.WriteLine("Enemy in range");
+                        enemys.enemyHp--;
+                        break;
+                       
+                        //if (towers.EnemyInRange(enemys) == true)
+                        //{
+                           
+                        //}
+                    }
+
+                   
+                }
+              
             }
 
 
@@ -347,7 +369,7 @@ namespace TowerDefence
 
             foreach (Enemys enemys in enemyList)
             {
-                if (!(enemys.positionFloat >= SplineManager.simplePath.endT))
+                if (!(enemys.positionFloat >= SplineManager.simplePath.endT) && enemys.alive)
                 {
 
                     enemys.Draw(_spriteBatch);
@@ -355,12 +377,18 @@ namespace TowerDefence
                    // _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemys.positionFloat), null, Color.White, enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
 
                 }
+                //else if (!enemys.alive)              
+                //{
+                //    enemyList.Remove(enemys);
+                //    break;
+                    
+                //}
                 else
                 {
                     enemyList.Remove(enemys);
                     break;
-                    
                 }
+               
             }
           
 
