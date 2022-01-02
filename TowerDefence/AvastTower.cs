@@ -11,7 +11,7 @@ namespace TowerDefence
     {
         
 
-        public AvastTower(Texture2D texture, Vector2 position, Rectangle HitBox, float rad) : base(texture, position, HitBox, rad)
+        public AvastTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad) : base(texture, position, HitBox, rad)
         {
             
         }

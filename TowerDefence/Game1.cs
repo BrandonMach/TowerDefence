@@ -257,19 +257,20 @@ namespace TowerDefence
 
             foreach (Towers towers in towersList)
             {
+                
                 foreach (Enemys enemys in enemyList)
                 {
                     if (towers.hitbox.Intersects(enemys.hitbox))
                     {
-                        if (towers.EnemyInRange(enemys) == true)
-                        {
+                        //if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad + enemys.rad))
+                        //{
 
                             Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
                             Debug.WriteLine("Enemy in range");
                             enemys.enemyHp--;
                             break;
 
-                        }
+                        //}
                     }
 
                    
@@ -281,6 +282,13 @@ namespace TowerDefence
 
             DrawOnRenderTarget(); ///dasdadasad
         }
+
+        //public bool EnemyInRange(Enemys other)
+        //{
+
+        //    return Vector2.Distance(pos, other.positionV2) < (rad + other.rad);
+
+        //}
 
         protected override void Draw(GameTime gameTime)
         {
@@ -390,12 +398,6 @@ namespace TowerDefence
                    // _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemys.positionFloat), null, Color.White, enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
 
                 }
-                //else if (!enemys.alive)              
-                //{
-                //    enemyList.Remove(enemys);
-                //    break;
-                    
-                //}
                 else
                 {
                     enemyList.Remove(enemys);
