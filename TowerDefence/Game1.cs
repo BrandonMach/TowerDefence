@@ -374,6 +374,12 @@ namespace TowerDefence
             SplineManager.simplePath.Draw(_spriteBatch);
             //SplineManager.simplePath.DrawPoints(_spriteBatch);
 
+
+            foreach (Towers twrs in towersList)
+            {
+                twrs.Draw(_spriteBatch);
+            }
+
             foreach (Enemys enemys in enemyList)
             {
                 if (!(enemys.positionFloat >= SplineManager.simplePath.endT) && enemys.alive)
@@ -401,10 +407,7 @@ namespace TowerDefence
 
 
 
-            foreach (Towers twrs in towersList)
-            {
-                twrs.Draw(_spriteBatch);
-            }
+          
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
           

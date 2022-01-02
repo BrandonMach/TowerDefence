@@ -18,13 +18,14 @@ namespace TowerDefence
         public Rectangle splineHitbox;
         public float rad;
         public int enemyHp;
+        Rectangle hpRect;
         public bool alive;
 
         public Enemys(Texture2D texture, Vector2 position, Rectangle HitBox):base(texture, position, HitBox)
         {
 
             speed = 3;
-            enemyHp = 10;
+            enemyHp = 50;
             alive = true;
         }
 
@@ -38,6 +39,8 @@ namespace TowerDefence
             rad = hitbox.Width / 2;
 
 
+            hpRect = new Rectangle((int)positionV2.X, (int)positionV2.Y-30, enemyHp, 10);
+
             if(enemyHp <= 0)
             {
                 alive = false;
@@ -45,13 +48,10 @@ namespace TowerDefence
         }
 
         public override void Draw(SpriteBatch _spriteBatch)
-        {
-
-            
+        {         
                 _spriteBatch.Draw(texture, SplineManager.simplePath.GetPos(positionFloat), null, Color.Blue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
                 _spriteBatch.Draw(texture, hitbox, Color.Red);
-            
-           
+                _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);  
         }
 
 
