@@ -12,12 +12,14 @@ namespace TowerDefence
         public int rad;
         public Rectangle rangeRect;
 
-        public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad) : base(texture, position, HitBox)
+        public double startAttackTimer;
+        public double attackDelay;
+
+        public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox)
         {
-
+            startAttackTimer = attackTimer;
+            this.attackDelay = attackDelay;
         }
-
-
 
         public override void Update()
         {

@@ -97,8 +97,8 @@ namespace TowerDefence
             myForm1 = new NameMenu();
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
-            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3);
-            monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height), 5);
+            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3, 0,2);
+            monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height), 5, 0,5);
 
             roadBallPos = SplineManager.simplePath.beginT;
 
@@ -116,8 +116,7 @@ namespace TowerDefence
                 Exit();
          
             switch (currentGameState)
-            {
-                 
+            { 
                 case GameState.StartMenu:
                    
                     if (myForm1.PlayerName != "")
@@ -127,18 +126,15 @@ namespace TowerDefence
                         isPaused = false;
                     }
                     break;
-                case GameState.Game:
-                    
+                case GameState.Game:                  
                     if(!isPaused)
                     {
                         GameUpdate(gameTime);
-                    }
-                   
+                    }                  
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                     {
                         currentGameState = GameState.Pause;
-                        isPaused = true;
-                         
+                        isPaused = true;                    
                     }
                     break;
                 case GameState.Pause:
@@ -154,8 +150,6 @@ namespace TowerDefence
                 default:
                     break;
             }
-
-
             base.Update(gameTime);
         }
 
@@ -227,7 +221,7 @@ namespace TowerDefence
 
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),5));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),5, 0 , 0.05));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -245,7 +239,7 @@ namespace TowerDefence
 
 
                             //dadakdnandjadadnadad
-                            towersList.Add(new Towers(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height),5));
+                            towersList.Add(new Towers(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height),5,0,0.1));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -255,20 +249,32 @@ namespace TowerDefence
                     break;
             }
 
+            
+
             foreach (Towers towers in towersList)
             {
-                
+              
                 foreach (Enemys enemys in enemyList)
                 {
                     if (towers.hitbox.Intersects(enemys.hitbox))
                     {
                         //if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad + enemys.rad))
                         //{
-
+                        towers.startAttackTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                        if(towers.startAttackTimer >= towers.attackDelay)
+                        {
+                            towers.startAttackTimer -= towers.attackDelay;
+                            Debug.WriteLine("StartTimer" + towers.startAttackTimer);
+                            Debug.WriteLine("attack delay " + towers.attackDelay);
                             Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
                             Debug.WriteLine("Enemy in range");
                             enemys.enemyHp--;
+                            
                             break;
+
+                        }
+
+
 
                         //}
                     }
