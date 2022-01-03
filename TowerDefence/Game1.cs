@@ -259,7 +259,7 @@ namespace TowerDefence
 
             foreach (Towers towers in towersList)
             {
-               // rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
+                rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
                 foreach (Enemys enemys in enemyList)
                 {
