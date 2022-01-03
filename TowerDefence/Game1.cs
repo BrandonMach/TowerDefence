@@ -204,7 +204,7 @@ namespace TowerDefence
             //How many enemys alive
             Debug.WriteLine(enemyList.Count);
 
-            ClickInfo();
+            
 
             switch (currentTowerSelected)
             {
@@ -253,11 +253,13 @@ namespace TowerDefence
                     break;
             }
 
-            
+
+            ClickInfo();
+
 
             foreach (Towers towers in towersList)
             {
-                rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
+               // rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
                 foreach (Enemys enemys in enemyList)
                 {
@@ -333,15 +335,28 @@ namespace TowerDefence
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
-
+           
 
 
 
 
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
 
+            foreach (Towers towers in towersList)
+            {
+                if (towers.infoClicked)
+                {
+                    rangeRect = new Rectangle((int)towers.pos.X - SpriteManager.RangeRing.Width * 2, (int)towers.pos.Y - SpriteManager.RangeRing.Height * 2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
-           
+                    _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+
+                }
+            }
+
+
+         
+
+
             switch (currentTowerSelected)
             {
                 case TowerSelect.None:
@@ -389,18 +404,7 @@ namespace TowerDefence
                 twrs.Draw(_spriteBatch);
             }
 
-            foreach (Towers towers in towersList)
-            {
-                if (towers.infoClicked)
-                {
-                    Debug.WriteLine(towers.rad);
-
-                    _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 1f, new Vector2(towers.texture.Width, towers.texture.Height), SpriteEffects.None, 1f);
-                }
-
-
-            }
-
+           
 
 
             foreach (Enemys enemys in enemyList)
@@ -449,11 +453,12 @@ namespace TowerDefence
             {
                 if (towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                 {
+                    
                     Debug.WriteLine("Yoasdadaodaodmamd");
                     towers.infoClicked = true;
 
                 }
-                else if(!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                 {
                     towers.infoClicked = false;
                 }

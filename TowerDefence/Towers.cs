@@ -42,7 +42,7 @@ namespace TowerDefence
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch);
-            _spriteBatch.Draw(texture, hitbox, Color.Green);
+            
         }
 
 
