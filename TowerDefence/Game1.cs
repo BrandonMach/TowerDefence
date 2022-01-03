@@ -257,10 +257,11 @@ namespace TowerDefence
 
             foreach (Towers towers in towersList)
             {
-                      
+                rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
+
                 foreach (Enemys enemys in enemyList)
                 {
-                    if (towers.hitbox.Intersects(enemys.hitbox))
+                    if (rangeRect.Intersects(enemys.hitbox))
                     {
                         //if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad + enemys.rad))
                         //{
@@ -293,12 +294,6 @@ namespace TowerDefence
             DrawOnRenderTarget(); ///dasdadasad
         }
 
-        //public bool EnemyInRange(Enemys other)
-        //{
-
-        //    return Vector2.Distance(pos, other.positionV2) < (rad + other.rad);
-
-        //}
 
         protected override void Draw(GameTime gameTime)
         {
@@ -307,8 +302,7 @@ namespace TowerDefence
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-
-
+            
             switch (currentGameState)
             {
                 case GameState.StartMenu:
@@ -341,24 +335,13 @@ namespace TowerDefence
 
 
 
-            foreach (Towers towers in towersList)
-            {
-                if (towers.infoClicked)
-                {
-                    Debug.WriteLine(towers.rad);
-                    rangeRect = new Rectangle((int)towers.pos.X, (int)towers.pos.Y, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
-                    _spriteBatch.Draw(SpriteManager.RangeRing,rangeRect, null, Color.Red, 1f, new Vector2(towers.texture.Width / 4, towers.texture.Height / 4), SpriteEffects.None, 1f);
-                }
-
-
-            }
 
 
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
 
 
-
+           
             switch (currentTowerSelected)
             {
                 case TowerSelect.None:
@@ -405,6 +388,20 @@ namespace TowerDefence
             {
                 twrs.Draw(_spriteBatch);
             }
+
+            foreach (Towers towers in towersList)
+            {
+                if (towers.infoClicked)
+                {
+                    Debug.WriteLine(towers.rad);
+
+                    _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 1f, new Vector2(towers.texture.Width, towers.texture.Height), SpriteEffects.None, 1f);
+                }
+
+
+            }
+
+
 
             foreach (Enemys enemys in enemyList)
             {
