@@ -14,11 +14,13 @@ namespace TowerDefence
 
         public double startAttackTimer;
         public double attackDelay;
+        public bool infoClicked;
 
         public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox)
         {
             startAttackTimer = attackTimer;
             this.attackDelay = attackDelay;
+            infoClicked = false;
         }
 
         public override void Update()
@@ -29,8 +31,10 @@ namespace TowerDefence
 
             hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height);
             rangeRect = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width+rad, texture.Height+rad);
-        }
 
+           
+        }
+      
        
 
         public override void Draw(SpriteBatch _spriteBatch)

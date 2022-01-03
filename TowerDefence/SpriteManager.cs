@@ -20,6 +20,7 @@ namespace TowerDefence
             public static Texture2D PauseWindowTex { get; private set; }
             public static Texture2D RoadTex { get; private set; }
             public static Texture2D HPBarTex { get; private set; }
+            public static Texture2D RangeRing { get; private set; }
 
 
         public static void LoadSprites(ContentManager Content)
@@ -32,6 +33,7 @@ namespace TowerDefence
                 PauseWindowTex = Content.Load<Texture2D>("pauseTD");
                 RoadTex = Content.Load<Texture2D>("road");
                 HPBarTex = Content.Load<Texture2D>("hpRect");
+                RangeRing = Content.Load < Texture2D>("rangeRing");
             }
         
     }

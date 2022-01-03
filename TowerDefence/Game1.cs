@@ -202,7 +202,7 @@ namespace TowerDefence
             //How many enemys alive
             Debug.WriteLine(enemyList.Count);
 
-
+            ClickInfo();
 
             switch (currentTowerSelected)
             {
@@ -214,36 +214,38 @@ namespace TowerDefence
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
                     if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2)
                     {
-                        Debug.WriteLine("clicked");
+                       
                         if (CanPlace(avastSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-
+                            
 
 
                             towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),5, 0 , 0.05));
                             Debug.WriteLine("placed");
                         }
                     }
-                    Debug.WriteLine(towersList.Count);
+                   // Debug.WriteLine(towersList.Count);
+
+
                     break;
                 case TowerSelect.Monkey:
                     monkeySelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
                     if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - monkeySelected.texture.Width / 2)
                     {
-                        Debug.WriteLine("clicked");
+                        
                         if (CanPlace(monkeySelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-
+                           
 
                             //dadakdnandjadadnadad
                             towersList.Add(new Towers(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height),5,0,0.1));
                             Debug.WriteLine("placed");
                         }
                     }
-                    Debug.WriteLine(towersList.Count);
+                   // Debug.WriteLine(towersList.Count);
                     break;
                 default:
                     break;
@@ -335,16 +337,22 @@ namespace TowerDefence
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
+
+
             foreach (Towers towers in towersList)
             {
-                _spriteBatch.Draw(SpriteManager.BallTex, towers.pos, null, Color.Red, 1f, new Vector2(towers.texture.Width / 2, towers.texture.Height / 2), towers.rad, SpriteEffects.None, 1f);
+                if (towers.infoClicked)
+                {
+                    _spriteBatch.Draw(SpriteManager.RangeRing, towers.pos, null, Color.Red, 1f, new Vector2(towers.texture.Width / 4, towers.texture.Height / 4), 3, SpriteEffects.None, 1f);
+                }
+
+
             }
 
-            _spriteBatch.Draw(SpriteManager.BallTex, new Vector2(500,500), null, Color.Red, 1f, Vector2.Zero, 5, SpriteEffects.None, 1f);
 
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
 
-           
+
 
             switch (currentTowerSelected)
             {
@@ -369,7 +377,6 @@ namespace TowerDefence
 
         private void DrawOnRenderTarget()
         {
-
 
             GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(Color.Transparent);
@@ -412,10 +419,6 @@ namespace TowerDefence
                
             }
           
-
-
-
-          
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);
           
@@ -436,6 +439,21 @@ namespace TowerDefence
                     
             }
             return true;
+        }
+
+        public void ClickInfo()
+        {
+            foreach (Towers towers in towersList)
+            {
+                if (towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                {
+                    Debug.WriteLine("Yoasdadaodaodmamd");
+                    towers.infoClicked = true;
+
+                }
+            }
+
+           
         }
 
 
