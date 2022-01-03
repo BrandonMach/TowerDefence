@@ -10,7 +10,7 @@ namespace TowerDefence
     public class Towers : GameObject
     {
         public int rad;
-        public Rectangle rangeRect;
+        public Rectangle rangeCircle;
 
         public double startAttackTimer;
         public double attackDelay;
@@ -21,6 +21,7 @@ namespace TowerDefence
             startAttackTimer = attackTimer;
             this.attackDelay = attackDelay;
             infoClicked = false;
+            this.rad = rad;
         }
 
         public override void Update()
@@ -30,12 +31,13 @@ namespace TowerDefence
             
 
             hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height);
-            rangeRect = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width+rad, texture.Height+rad);
+            rangeCircle = new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.RangeRing.Width *rad, SpriteManager.RangeRing.Height *rad);
 
-           
+
+
         }
-      
-       
+
+
 
         public override void Draw(SpriteBatch _spriteBatch)
         {

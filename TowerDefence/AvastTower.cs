@@ -20,7 +20,7 @@ namespace TowerDefence
         {
 
             base.Update();
-           
+            Debug.WriteLine(rad);
            
         }
 

@@ -44,6 +44,8 @@ namespace TowerDefence
         Enemys enemys;
         List<Enemys> enemyList;
         Color backgroundColor;
+
+        public Rectangle rangeRect;
         
 
         //public SimplePath simplePath;
@@ -183,7 +185,7 @@ namespace TowerDefence
             {
                 enemys = new Enemys(SpriteManager.TrojanTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.TrojanTex.Width, SpriteManager.TrojanTex.Height));
                 enemyList.Add(enemys);
-                Debug.WriteLine(enemyList.Count);
+               // Debug.WriteLine(enemyList.Count);
             }
 
             if (KeyMouseReader.KeyPressed(Keys.S)) //Speed up enemys
@@ -221,7 +223,7 @@ namespace TowerDefence
                             
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),5, 0 , 0.05));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),4, 0 , 0.05));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -255,7 +257,7 @@ namespace TowerDefence
 
             foreach (Towers towers in towersList)
             {
-              
+                      
                 foreach (Enemys enemys in enemyList)
                 {
                     if (towers.hitbox.Intersects(enemys.hitbox))
@@ -343,7 +345,10 @@ namespace TowerDefence
             {
                 if (towers.infoClicked)
                 {
-                    _spriteBatch.Draw(SpriteManager.RangeRing, towers.pos, null, Color.Red, 1f, new Vector2(towers.texture.Width / 4, towers.texture.Height / 4), 3, SpriteEffects.None, 1f);
+                    Debug.WriteLine(towers.rad);
+                    rangeRect = new Rectangle((int)towers.pos.X, (int)towers.pos.Y, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
+
+                    _spriteBatch.Draw(SpriteManager.RangeRing,rangeRect, null, Color.Red, 1f, new Vector2(towers.texture.Width / 4, towers.texture.Height / 4), SpriteEffects.None, 1f);
                 }
 
 
@@ -450,6 +455,10 @@ namespace TowerDefence
                     Debug.WriteLine("Yoasdadaodaodmamd");
                     towers.infoClicked = true;
 
+                }
+                else if(!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                {
+                    towers.infoClicked = false;
                 }
             }
 
