@@ -38,12 +38,18 @@ namespace TowerDefence
 
         RenderTarget2D renderTarget;
         GameObject gameObject;
-        HUDManager hudManager;
+      
         Towers avastSelected;
         Towers nordVPNSelected;
         List<GameObject> towersList;
         List<NordVPNTower> nordList;
 
+        //HUD
+        HUDManager hudManager;
+        public static int startingMoney;
+        public static int money;
+        public static int avastPlaceCost = 125;
+        public static int nordVPNCost = 175;
 
         Enemys enemys;
         public static List<Enemys> enemyList;
@@ -55,8 +61,7 @@ namespace TowerDefence
         //public SimplePath simplePath;
         float enemyPos; // move up the spline
         float nextEnemyPos;
-        float enemyRotation;
-        float roadBallPos;
+        
 
         public bool isPaused;
         
@@ -80,7 +85,7 @@ namespace TowerDefence
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             backgroundColor = new Color(0, 128, 128);
 
-            hudManager = new HUDManager();
+            hudManager = new HUDManager(Content);
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
@@ -106,7 +111,8 @@ namespace TowerDefence
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3, 0,2);
             nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
 
-            roadBallPos = SplineManager.simplePath.beginT;
+            startingMoney = 350;
+            money = 0;
 
 
 
@@ -130,6 +136,7 @@ namespace TowerDefence
                         Window.Title = "Player: " + myForm1.PlayerName;
                         currentGameState = GameState.Game;
                         isPaused = false;
+                        money = startingMoney;
                     }
                     break;
                 case GameState.Game:                  
@@ -169,8 +176,7 @@ namespace TowerDefence
             // TODO: Add your update logic here
             enemyPos += 5;
             nextEnemyPos = enemyPos + 1;
-            enemyRotation = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextEnemyPos).Y - SplineManager.simplePath.GetPos(enemyPos).Y, SplineManager.simplePath.GetPos(nextEnemyPos).X - SplineManager.simplePath.GetPos(enemyPos).X);
-
+        
 
             KeyMouseReader.Update();
             //gameObject.Update();
@@ -211,7 +217,7 @@ namespace TowerDefence
 
                     avastSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2 -200)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2 -200 && money >= avastPlaceCost)
                     {
                        
                         if (CanPlace(avastSelected))
@@ -223,6 +229,7 @@ namespace TowerDefence
                             towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150, 0 , 400));
                             Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
+                            money -= avastPlaceCost;
                         }
                     }
                    // Debug.WriteLine(towersList.Count);
@@ -232,7 +239,7 @@ namespace TowerDefence
                 case TowerSelect.NordVPN:
                      nordVPNSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + nordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + nordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - nordVPNSelected.texture.Width / 2-200)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + nordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + nordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - nordVPNSelected.texture.Width / 2-200 && money >= nordVPNCost)
                     {
                         
                         if (CanPlace(nordVPNSelected))
@@ -245,6 +252,7 @@ namespace TowerDefence
                             Debug.WriteLine("Mouse pos" +KeyMouseReader.mouseState.X + KeyMouseReader.mouseState.Y);
                             Debug.WriteLine("tower" + newPosition);
                             currentTowerSelected = TowerSelect.None;
+                            money -= nordVPNCost;
                         }
                     }
                    // Debug.WriteLine(towersList.Count);

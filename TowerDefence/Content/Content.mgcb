@@ -85,6 +85,13 @@
 /processorParam:TextureFormat=Color
 /build:loadingHP.jpg
 
+#begin money_Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:money_Font.spritefont
+
 #begin NVP.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -25,7 +25,7 @@ namespace TowerDefence
         {
 
             speed = 3;
-            enemyHp = 50;
+            enemyHp = 20;
             alive = true;
         }
 
@@ -44,6 +44,7 @@ namespace TowerDefence
             if(enemyHp <= 0)
             {
                 alive = false;
+                Game1.money += 25;
             }
             if(speed<= 1)
             {
