@@ -46,10 +46,19 @@ namespace TowerDefence
 
         //HUD
         HUDManager hudManager;
+        int hudWith = 200;
         public static int startingMoney;
         public static int money;
-        public static int avastPlaceCost = 125;
-        public static int nordVPNCost = 175;
+        public static int avastPlaceCost = 115;
+        public static int nordVPNCost = 275;
+        public static int waveNum = 0;
+        WaveManager wavemanager;
+
+
+
+        public static bool spawnWaves;
+
+    
 
         Enemys enemys;
         public static List<Enemys> enemyList;
@@ -90,7 +99,7 @@ namespace TowerDefence
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
             //simplePath = new SimplePath(GraphicsDevice);
-            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width +200;
+            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width + hudWith;
             _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height;
             _graphics.ApplyChanges();
 
@@ -113,7 +122,8 @@ namespace TowerDefence
 
             startingMoney = 350;
             money = 0;
-
+            wavemanager = new WaveManager();
+            spawnWaves = false;
 
 
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
@@ -183,12 +193,18 @@ namespace TowerDefence
 
             hudManager.Update();
            
-            if (KeyMouseReader.KeyPressed(Keys.L))
+            if (KeyMouseReader.KeyPressed(Keys.Space))
             {
-                enemys = new Enemys(SpriteManager.TrojanTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.TrojanTex.Width, SpriteManager.TrojanTex.Height));
-                enemyList.Add(enemys);
-               // Debug.WriteLine(enemyList.Count);
+                spawnWaves = true;
+                waveNum++;
+                wavemanager.startSpawnDuration = 0;
+                money += 150;
             }
+            if (spawnWaves)
+            {
+                wavemanager.Update(gameTime);
+            }
+            
 
             if (KeyMouseReader.KeyPressed(Keys.S)) //Speed up enemys
             {
@@ -217,31 +233,24 @@ namespace TowerDefence
 
                     avastSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2 -200 && money >= avastPlaceCost)
-                    {
-                       
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2 - hudWith && money >= avastPlaceCost)
+                    {                      
                         if (CanPlace(avastSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                            
-
-
                             towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150, 0 , 400));
                             Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
                             money -= avastPlaceCost;
                         }
                     }
-                   // Debug.WriteLine(towersList.Count);
-
 
                     break;
                 case TowerSelect.NordVPN:
                      nordVPNSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + nordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + nordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - nordVPNSelected.texture.Width / 2-200 && money >= nordVPNCost)
-                    {
-                        
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + nordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + nordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - nordVPNSelected.texture.Width / 2-hudWith && money >= nordVPNCost)
+                    {       
                         if (CanPlace(nordVPNSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);

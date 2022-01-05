@@ -19,6 +19,10 @@ namespace TowerDefence
 
         private string avastText;
         private string nordVpnText;
+
+        private Vector2 waveTextPos;
+
+        
        
         public HUDManager(ContentManager Content)
         {
@@ -30,6 +34,7 @@ namespace TowerDefence
             nordVPNTextPos = new Vector2(1810, 430);
             moneyPos = new Vector2(1750, 10);
             money_Font = Content.Load<SpriteFont>("money_Font");
+            waveTextPos = new Vector2(1550, 10);
 
             avastText = Game1.avastPlaceCost.ToString();
             nordVpnText = Game1.nordVPNCost.ToString();
@@ -66,6 +71,7 @@ namespace TowerDefence
                 _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.Red);
             }
 
+            _spriteBatch.DrawString(money_Font, "" + Game1.waveNum, waveTextPos, Color.Black);
             _spriteBatch.DrawString(money_Font, "$" + Game1.money, moneyPos, Color.Gold);
             _spriteBatch.DrawString(money_Font, "$" + Game1.avastPlaceCost, avastTextPos, Color.Gold,0f, money_Font.MeasureString(avastText), 0.7f, SpriteEffects.None, 1f);
             _spriteBatch.DrawString(money_Font, "$" + Game1.nordVPNCost, nordVPNTextPos, Color.Gold, 0f, money_Font.MeasureString(nordVpnText),0.7f,SpriteEffects.None,1f);

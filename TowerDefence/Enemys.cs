@@ -27,6 +27,11 @@ namespace TowerDefence
             speed = 3;
             enemyHp = 20;
             alive = true;
+
+            if(Game1.waveNum >= 5)
+            {
+                enemyHp = 25;
+            }
         }
 
         public override void Update()
@@ -50,6 +55,7 @@ namespace TowerDefence
             {
                 speed = 1;
             }
+           
         }
 
         public override void Draw(SpriteBatch _spriteBatch)
