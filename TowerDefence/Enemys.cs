@@ -45,6 +45,10 @@ namespace TowerDefence
             {
                 alive = false;
             }
+            if(speed<= 1)
+            {
+                speed = 1;
+            }
         }
 
         public override void Draw(SpriteBatch _spriteBatch)

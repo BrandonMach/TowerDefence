@@ -20,13 +20,14 @@ namespace TowerDefence
         }
         GameState currentGameState;
 
-        enum TowerSelect
+        public enum TowerSelect
         {
             None,
             Avast,
+            NordVPN,
             Monkey, 
         }
-        TowerSelect currentTowerSelected;
+        public static TowerSelect currentTowerSelected;
 
 
 
@@ -39,14 +40,16 @@ namespace TowerDefence
         GameObject gameObject;
         HUDManager hudManager;
         Towers avastSelected;
-        Towers monkeySelected;
+        Towers NordVPNSelected;
         List<GameObject> towersList;
+        List<NordVPNTower> nordList;
+
 
         Enemys enemys;
-        List<Enemys> enemyList;
+        public static List<Enemys> enemyList;
         Color backgroundColor;
 
-        public Rectangle rangeRect;
+        public  Rectangle rangeRect;
         
 
         //public SimplePath simplePath;
@@ -101,7 +104,7 @@ namespace TowerDefence
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3, 0,2);
-            monkeySelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
+            NordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
 
             roadBallPos = SplineManager.simplePath.beginT;
 
@@ -172,17 +175,9 @@ namespace TowerDefence
             KeyMouseReader.Update();
             //gameObject.Update();
 
-            if (KeyMouseReader.KeyPressed(Keys.D1))
-            {
-                currentTowerSelected = TowerSelect.Avast;
-
-            }
-            else if (KeyMouseReader.KeyPressed(Keys.D2))
-            {
-                currentTowerSelected = TowerSelect.Monkey;
-
-            }
-            else if (KeyMouseReader.KeyPressed(Keys.L))
+            hudManager.Update();
+           
+            if (KeyMouseReader.KeyPressed(Keys.L))
             {
                 enemys = new Enemys(SpriteManager.TrojanTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.TrojanTex.Width, SpriteManager.TrojanTex.Height));
                 enemyList.Add(enemys);
@@ -205,7 +200,8 @@ namespace TowerDefence
             //How many enemys alive
             Debug.WriteLine(enemyList.Count);
 
-            
+            avastSelected.Update();
+            NordVPNSelected.Update();
 
             switch (currentTowerSelected)
             {
@@ -224,28 +220,29 @@ namespace TowerDefence
                             
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),3, 0 , 0.05));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),4, 0 , 0.05));
                             Debug.WriteLine("placed");
+                            currentTowerSelected = TowerSelect.None;
                         }
                     }
                    // Debug.WriteLine(towersList.Count);
 
 
                     break;
-                case TowerSelect.Monkey:
-                    monkeySelected.Update();
+                case TowerSelect.NordVPN:
+                    NordVPNSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - monkeySelected.texture.Width / 2-200)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + NordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + NordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - NordVPNSelected.texture.Width / 2-200)
                     {
                         
-                        if (CanPlace(monkeySelected))
+                        if (CanPlace(NordVPNSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                           
 
-                            //dadakdnandjadadnadad
-                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),7,0,0.1));
+                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),6,0,0.1));
+                            
                             Debug.WriteLine("placed");
+                            currentTowerSelected = TowerSelect.None;
                         }
                     }
                    // Debug.WriteLine(towersList.Count);
@@ -258,15 +255,21 @@ namespace TowerDefence
             ClickInfo();
 
 
+            
             foreach (Towers towers in towersList)
             {
                 rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
+
+                
+                    
+                
                 foreach (Enemys enemys in enemyList)
                 {
                     if (rangeRect.Intersects(enemys.hitbox))
                     {
-                        
+                       
+
                         //if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad + enemys.rad))
                         //{
                         towers.startAttackTimer += gameTime.ElapsedGameTime.TotalSeconds;
@@ -287,8 +290,10 @@ namespace TowerDefence
 
                         //}
                     }
-
                    
+                   
+
+
                 }
               
             }
@@ -369,8 +374,8 @@ namespace TowerDefence
 
 
                     break;
-                case TowerSelect.Monkey:
-                    monkeySelected.Draw(_spriteBatch);
+                case TowerSelect.NordVPN:
+                    NordVPNSelected.Draw(_spriteBatch);
 
 
                     break;

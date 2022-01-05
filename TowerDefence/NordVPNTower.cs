@@ -10,7 +10,7 @@ namespace TowerDefence
     class NordVPNTower : Towers
     {
 
-
+        Rectangle slowRange;
         public NordVPNTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad, attackTimer, attackDelay)
         {
 
@@ -20,7 +20,19 @@ namespace TowerDefence
         {
 
             base.Update();
+            slowRange = new Rectangle((int)pos.X - SpriteManager.RangeRing.Width * 2, (int)pos.Y - SpriteManager.RangeRing.Height * 2, SpriteManager.RangeRing.Width * rad, SpriteManager.RangeRing.Height *rad);
 
+
+            foreach (Enemys enemy in Game1.enemyList)
+            {
+                if (slowRange.Intersects(enemy.hitbox))
+                {
+                    enemy.speed -= 0.1f;
+                    Debug.WriteLine("enemy speed: " +enemy.speed);
+                }
+            }
+
+         
         }
 
 
