@@ -37,6 +37,7 @@ namespace TowerDefence
 
         RenderTarget2D renderTarget;
         GameObject gameObject;
+        HUDManager hudManager;
         Towers avastSelected;
         Towers monkeySelected;
         List<GameObject> towersList;
@@ -75,13 +76,13 @@ namespace TowerDefence
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             backgroundColor = new Color(0, 128, 128);
-            
-         
+
+            hudManager = new HUDManager();
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
             //simplePath = new SimplePath(GraphicsDevice);
-            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width ;
+            _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width +200;
             _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height;
             _graphics.ApplyChanges();
 
@@ -100,7 +101,7 @@ namespace TowerDefence
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3, 0,2);
-            monkeySelected = new Towers(SpriteManager.BloonsMonkeyTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height), 5, 0,5);
+            monkeySelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
 
             roadBallPos = SplineManager.simplePath.beginT;
 
@@ -214,7 +215,7 @@ namespace TowerDefence
 
                     avastSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2 -200)
                     {
                        
                         if (CanPlace(avastSelected))
@@ -223,7 +224,7 @@ namespace TowerDefence
                             
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),4, 0 , 0.05));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),3, 0 , 0.05));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -234,7 +235,7 @@ namespace TowerDefence
                 case TowerSelect.Monkey:
                     monkeySelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - monkeySelected.texture.Width / 2)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + monkeySelected.texture.Width / 2 && Mouse.GetState().Y > 0 + monkeySelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - monkeySelected.texture.Width / 2-200)
                     {
                         
                         if (CanPlace(monkeySelected))
@@ -243,7 +244,7 @@ namespace TowerDefence
                            
 
                             //dadakdnandjadadnadad
-                            towersList.Add(new Towers(SpriteManager.BloonsMonkeyTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.BloonsMonkeyTex.Width / 2, (int)newPosition.Y - SpriteManager.BloonsMonkeyTex.Height / 2, SpriteManager.BloonsMonkeyTex.Width, SpriteManager.BloonsMonkeyTex.Height),5,0,0.1));
+                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),7,0,0.1));
                             Debug.WriteLine("placed");
                         }
                     }
@@ -265,10 +266,11 @@ namespace TowerDefence
                 {
                     if (rangeRect.Intersects(enemys.hitbox))
                     {
+                        
                         //if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad + enemys.rad))
                         //{
                         towers.startAttackTimer += gameTime.ElapsedGameTime.TotalSeconds;
-                        if(towers.startAttackTimer >= towers.attackDelay)
+                        if(towers.startAttackTimer >= towers.attackDelay && rangeRect.Intersects(enemys.hitbox))
                         {
                             towers.startAttackTimer -= towers.attackDelay;
                             Debug.WriteLine("StartTimer" + towers.startAttackTimer);
@@ -335,7 +337,7 @@ namespace TowerDefence
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
-           
+            hudManager.Draw(_spriteBatch);
 
 
 
@@ -346,9 +348,9 @@ namespace TowerDefence
             {
                 if (towers.infoClicked)
                 {
-                    rangeRect = new Rectangle((int)towers.pos.X - SpriteManager.RangeRing.Width * 2, (int)towers.pos.Y - SpriteManager.RangeRing.Height * 2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
+                    rangeRect = new Rectangle((int)towers.pos.X , (int)towers.pos.Y , SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
-                    _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+                    _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, new Vector2(towers.texture.Width/4, towers.texture.Height/4), SpriteEffects.None, 1f);
 
                 }
             }

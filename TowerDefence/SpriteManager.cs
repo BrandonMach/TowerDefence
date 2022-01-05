@@ -21,6 +21,7 @@ namespace TowerDefence
             public static Texture2D RoadTex { get; private set; }
             public static Texture2D HPBarTex { get; private set; }
             public static Texture2D RangeRing { get; private set; }
+            public static Texture2D NordVPNTex { get; private set; }
 
 
         public static void LoadSprites(ContentManager Content)
@@ -34,6 +35,8 @@ namespace TowerDefence
                 RoadTex = Content.Load<Texture2D>("road");
                 HPBarTex = Content.Load<Texture2D>("hpRect");
                 RangeRing = Content.Load < Texture2D>("rangeRing");
+                NordVPNTex = Content.Load < Texture2D>("NVP");
+
             }
         
     }

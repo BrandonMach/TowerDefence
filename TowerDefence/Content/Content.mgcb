@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:loadingHP.jpg
 
+#begin NVP.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NVP.png
+
 #begin pauseTD.png
 /importer:TextureImporter
 /processor:TextureProcessor
