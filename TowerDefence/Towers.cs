@@ -31,7 +31,7 @@ namespace TowerDefence
             
 
             hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height);
-            rangeCircle = new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.RangeRing.Width *rad, SpriteManager.RangeRing.Height *rad);
+           // rangeCircle = new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.RangeRing.Width *rad, SpriteManager.RangeRing.Height *rad);
 
 
 

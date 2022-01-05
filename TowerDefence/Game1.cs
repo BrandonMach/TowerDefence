@@ -40,7 +40,7 @@ namespace TowerDefence
         GameObject gameObject;
         HUDManager hudManager;
         Towers avastSelected;
-        Towers NordVPNSelected;
+        Towers nordVPNSelected;
         List<GameObject> towersList;
         List<NordVPNTower> nordList;
 
@@ -104,7 +104,7 @@ namespace TowerDefence
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3, 0,2);
-            NordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
+            nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
 
             roadBallPos = SplineManager.simplePath.beginT;
 
@@ -201,7 +201,7 @@ namespace TowerDefence
             Debug.WriteLine(enemyList.Count);
 
             avastSelected.Update();
-            NordVPNSelected.Update();
+            nordVPNSelected.Update();
 
             switch (currentTowerSelected)
             {
@@ -220,7 +220,7 @@ namespace TowerDefence
                             
 
 
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),4, 0 , 0.05));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150, 0 , 400));
                             Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
                         }
@@ -230,18 +230,20 @@ namespace TowerDefence
 
                     break;
                 case TowerSelect.NordVPN:
-                    NordVPNSelected.Update();
+                     nordVPNSelected.Update();
                     //för alla gameobjects bredd och höjd i Mouse.GetState()
-                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + NordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + NordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - NordVPNSelected.texture.Width / 2-200)
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + nordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + nordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - nordVPNSelected.texture.Width / 2-200)
                     {
                         
-                        if (CanPlace(NordVPNSelected))
+                        if (CanPlace(nordVPNSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
-                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),6,0,0.1));
+                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),250,0,200));
                             
                             Debug.WriteLine("placed");
+                            Debug.WriteLine("Mouse pos" +KeyMouseReader.mouseState.X + KeyMouseReader.mouseState.Y);
+                            Debug.WriteLine("tower" + newPosition);
                             currentTowerSelected = TowerSelect.None;
                         }
                     }
@@ -260,20 +262,38 @@ namespace TowerDefence
             {
                 rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
 
-
-                
-                    
                 
                 foreach (Enemys enemys in enemyList)
                 {
-                    if (rangeRect.Intersects(enemys.hitbox))
-                    {
-                       
+                    //if (rangeRect.Intersects(enemys.hitbox))
+                    //{
 
-                        //if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad + enemys.rad))
-                        //{
-                        towers.startAttackTimer += gameTime.ElapsedGameTime.TotalSeconds;
-                        if(towers.startAttackTimer >= towers.attackDelay && rangeRect.Intersects(enemys.hitbox))
+                    //    towers.startAttackTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                    //    if(towers.startAttackTimer >= towers.attackDelay && rangeRect.Intersects(enemys.hitbox))
+                    //    {
+                    //        towers.startAttackTimer -= towers.attackDelay;
+                    //        Debug.WriteLine("StartTimer" + towers.startAttackTimer);
+                    //        Debug.WriteLine("attack delay " + towers.attackDelay);
+                    //        Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
+                    //        Debug.WriteLine("Enemy in range");
+                    //        enemys.enemyHp--;
+
+                    //        break;
+
+                    //    }
+
+
+                    //}
+                  
+
+
+
+                    if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
+                    {
+                        Debug.WriteLine(enemys.positionV2);
+
+                        towers.startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+                        if (towers.startAttackTimer >= towers.attackDelay)
                         {
                             towers.startAttackTimer -= towers.attackDelay;
                             Debug.WriteLine("StartTimer" + towers.startAttackTimer);
@@ -281,21 +301,15 @@ namespace TowerDefence
                             Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
                             Debug.WriteLine("Enemy in range");
                             enemys.enemyHp--;
-                            
+
                             break;
 
                         }
 
-
-
-                        //}
                     }
-                   
-                   
-
 
                 }
-              
+
             }
 
 
@@ -353,7 +367,7 @@ namespace TowerDefence
             {
                 if (towers.infoClicked)
                 {
-                    rangeRect = new Rectangle((int)towers.pos.X , (int)towers.pos.Y , SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
+                    rangeRect = new Rectangle((int)towers.pos.X , (int)towers.pos.Y ,  towers.rad*2 - SpriteManager.RangeRing.Width,  towers.rad*2- SpriteManager.RangeRing.Height);
 
                     _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, new Vector2(towers.texture.Width/4, towers.texture.Height/4), SpriteEffects.None, 1f);
 
@@ -375,7 +389,7 @@ namespace TowerDefence
 
                     break;
                 case TowerSelect.NordVPN:
-                    NordVPNSelected.Draw(_spriteBatch);
+                    nordVPNSelected.Draw(_spriteBatch);
 
 
                     break;

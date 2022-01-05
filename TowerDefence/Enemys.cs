@@ -35,11 +35,11 @@ namespace TowerDefence
             nextFloatPosition = positionFloat + 1;
             rotation  = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextFloatPosition).Y - SplineManager.simplePath.GetPos(positionFloat).Y, SplineManager.simplePath.GetPos(nextFloatPosition).X - SplineManager.simplePath.GetPos(positionFloat).X);
             hitbox = new Rectangle((int)SplineManager.simplePath.GetPos(positionFloat).X - texture.Width / 2, (int)SplineManager.simplePath.GetPos(positionFloat).Y - texture.Height / 2, texture.Width, texture.Width);
-            positionV2 = new Vector2((int)SplineManager.simplePath.GetPos(positionFloat).X - texture.Width / 2, (int)SplineManager.simplePath.GetPos(positionFloat).Y - texture.Height / 2);
+            positionV2 = new Vector2((int)SplineManager.simplePath.GetPos(positionFloat).X , (int)SplineManager.simplePath.GetPos(positionFloat).Y);
             rad = hitbox.Width / 2;
 
 
-            hpRect = new Rectangle((int)positionV2.X, (int)positionV2.Y-30, enemyHp, 10);
+            hpRect = new Rectangle((int)positionV2.X, (int)positionV2.Y-70, enemyHp, 10);
 
             if(enemyHp <= 0)
             {
@@ -55,7 +55,8 @@ namespace TowerDefence
         {         
                 _spriteBatch.Draw(texture, SplineManager.simplePath.GetPos(positionFloat), null, Color.Blue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
                 _spriteBatch.Draw(texture, hitbox, Color.Red);
-                _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);  
+                _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);
+            _spriteBatch.Draw(texture, positionV2, Color.Yellow);
         }
 
 
