@@ -22,6 +22,19 @@ namespace TowerDefence
 
         private Vector2 waveTextPos;
 
+        public  bool nordTowerClicked;
+        public  bool avastTowerClicked;
+
+
+        public enum TowerInfo
+        {
+            Avast,
+            Nord, 
+            None,
+        }
+
+
+        public TowerInfo currentInfo = TowerInfo.None;
         
        
         public HUDManager(ContentManager Content)
@@ -39,6 +52,9 @@ namespace TowerDefence
             avastText = Game1.avastPlaceCost.ToString();
             nordVpnText = Game1.nordVPNCost.ToString();
 
+            nordTowerClicked = false;
+            avastTowerClicked = false;
+
         }
         public void Update()
         {
@@ -54,27 +70,56 @@ namespace TowerDefence
                 Game1.currentTowerSelected = Game1.TowerSelect.NordVPN;
             }
 
+            //switch (currentInfo)
+            //{
+            //    case TowerInfo.Avast:
+            //        break;
+            //    case TowerInfo.Nord:
+            //        break;
+            //    case TowerInfo.None:
+            //        break;
+            //    default:
+            //        break;
+            //}
+
 
 
         }
 
         public void Draw(SpriteBatch _spriteBatch)
         {
-            _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.White);
-            _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.White);
-            if(Game1.money <= Game1.avastPlaceCost)
-            {
-                _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.Red);
-            } 
-            if(Game1.money <= Game1.nordVPNCost)
-            {
-                _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.Red);
-            }
-
             _spriteBatch.DrawString(money_Font, "" + Game1.waveNum, waveTextPos, Color.Black);
             _spriteBatch.DrawString(money_Font, "$" + Game1.money, moneyPos, Color.Gold);
-            _spriteBatch.DrawString(money_Font, "$" + Game1.avastPlaceCost, avastTextPos, Color.Gold,0f, money_Font.MeasureString(avastText), 0.7f, SpriteEffects.None, 1f);
-            _spriteBatch.DrawString(money_Font, "$" + Game1.nordVPNCost, nordVPNTextPos, Color.Gold, 0f, money_Font.MeasureString(nordVpnText),0.7f,SpriteEffects.None,1f);
+
+            switch (currentInfo)
+            {
+                case TowerInfo.Avast:
+                    
+                    break;
+                case TowerInfo.Nord:
+                    
+                    break;
+                case TowerInfo.None:
+
+                    _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.White);
+                    _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.White);
+                    if (Game1.money <= Game1.avastPlaceCost)
+                    {
+                        _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.Red);
+                    }
+                    if (Game1.money <= Game1.nordVPNCost)
+                    {
+                        _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.Red);
+                    }
+
+                    _spriteBatch.DrawString(money_Font, "$" + Game1.avastPlaceCost, avastTextPos, Color.Gold, 0f, money_Font.MeasureString(avastText), 0.7f, SpriteEffects.None, 1f);
+                    _spriteBatch.DrawString(money_Font, "$" + Game1.nordVPNCost, nordVPNTextPos, Color.Gold, 0f, money_Font.MeasureString(nordVpnText), 0.7f, SpriteEffects.None, 1f);
+
+                    break;
+              
+            }
+
+
         }
     }
 }

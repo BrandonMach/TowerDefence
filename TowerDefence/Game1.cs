@@ -191,6 +191,7 @@ namespace TowerDefence
             KeyMouseReader.Update();
             //gameObject.Update();
 
+            ClickInfo();
             hudManager.Update();
            
             if (KeyMouseReader.KeyPressed(Keys.Space))
@@ -271,7 +272,6 @@ namespace TowerDefence
             }
 
 
-            ClickInfo();
 
 
             
@@ -282,27 +282,7 @@ namespace TowerDefence
                 
                 foreach (Enemys enemys in enemyList)
                 {
-                    //if (rangeRect.Intersects(enemys.hitbox))
-                    //{
-
-                    //    towers.startAttackTimer += gameTime.ElapsedGameTime.TotalSeconds;
-                    //    if(towers.startAttackTimer >= towers.attackDelay && rangeRect.Intersects(enemys.hitbox))
-                    //    {
-                    //        towers.startAttackTimer -= towers.attackDelay;
-                    //        Debug.WriteLine("StartTimer" + towers.startAttackTimer);
-                    //        Debug.WriteLine("attack delay " + towers.attackDelay);
-                    //        Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
-                    //        Debug.WriteLine("Enemy in range");
-                    //        enemys.enemyHp--;
-
-                    //        break;
-
-                    //    }
-
-
-                    //}
-                  
-
+                   
 
 
                     if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
@@ -376,7 +356,7 @@ namespace TowerDefence
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
-            hudManager.Draw(_spriteBatch);
+       
 
 
 
@@ -391,11 +371,22 @@ namespace TowerDefence
 
                     _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, new Vector2(towers.texture.Width/4, towers.texture.Height/4), SpriteEffects.None, 1f);
 
+                    if (towers is NordVPNTower && towers.infoClicked)
+                    {
+                        Debug.WriteLine("Nord VPN tower");
+                        hudManager.currentInfo = HUDManager.TowerInfo.Nord;
+                    }
+                    if (towers is AvastTower && towers.infoClicked)
+                    {
+                        Debug.WriteLine("Nord VPN tower");
+                        hudManager.currentInfo = HUDManager.TowerInfo.Avast;
+                    }
+
                 }
             }
 
+            hudManager.Draw(_spriteBatch);
 
-         
 
 
             switch (currentTowerSelected)
@@ -497,21 +488,25 @@ namespace TowerDefence
                     
                     Debug.WriteLine("Yoasdadaodaodmamd");
                     towers.infoClicked = true;
-                    if (towers is NordVPNTower)
-                    {
-                       Debug.WriteLine("Nord VPN tower");
-                    }
+                    
+                    
+
 
                 }
                 else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                 {
                     towers.infoClicked = false;
+                   
+                    hudManager.currentInfo = HUDManager.TowerInfo.None;
+                    
                 }
 
-                
+              
+
+
             }
 
-           
+
         }
 
 
