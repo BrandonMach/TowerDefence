@@ -117,8 +117,8 @@ namespace TowerDefence
             myForm1 = new NameMenu();
 
             SplineManager.LoadSpline(GraphicsDevice, Window);
-            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 3, 0,2);
-            nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 5, 0,5);
+            avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 150, 0,2);
+            nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 250, 0,5);
 
             startingMoney = 350;
             money = 0;
@@ -325,7 +325,10 @@ namespace TowerDefence
 
                     }
 
-                }
+
+
+
+                    }
 
             }
 
@@ -494,12 +497,18 @@ namespace TowerDefence
                     
                     Debug.WriteLine("Yoasdadaodaodmamd");
                     towers.infoClicked = true;
+                    if (towers is NordVPNTower)
+                    {
+                       Debug.WriteLine("Nord VPN tower");
+                    }
 
                 }
                 else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                 {
                     towers.infoClicked = false;
                 }
+
+                
             }
 
            

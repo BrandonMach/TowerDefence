@@ -21,10 +21,6 @@ namespace TowerDefence
 
         public virtual void Update()
         {
-
-
-            //pos.X = Mouse.GetState().X;
-            //pos.Y = Mouse.GetState().Y;
          
             hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2,texture.Width , texture.Height);
 

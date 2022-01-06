@@ -11,28 +11,23 @@ namespace TowerDefence
     {
 
         Rectangle slowRange;
+        public static int level;
         public NordVPNTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad, attackTimer, attackDelay)
         {
-
+            this.rad = rad;
         }
 
         public override void Update()
         {
-
             base.Update();
-            //slowRange = new Rectangle((int)pos.X - SpriteManager.RangeRing.Width * 2, (int)pos.Y - SpriteManager.RangeRing.Height * 2, SpriteManager.RangeRing.Width * rad, SpriteManager.RangeRing.Height *rad);
 
+        }
+        public void SlowEnemy()
+        {
+            slowRange = new Rectangle((int)pos.X - SpriteManager.RangeRing.Width, (int)pos.Y - SpriteManager.RangeRing.Height, rad * SpriteManager.RangeRing.Width, rad * SpriteManager.RangeRing.Height);
 
-            //foreach (Enemys enemy in Game1.enemyList)
-            //{
-            //    if (slowRange.Intersects(enemy.hitbox))
-            //    {
-            //        enemy.speed -= 0.1f;
-            //        Debug.WriteLine("enemy speed: " +enemy.speed);
-            //    }
-            //}
-
-         
+           
+              
         }
 
 
@@ -41,6 +36,8 @@ namespace TowerDefence
         {
 
             base.Draw(_spriteBatch);
+            _spriteBatch.Draw(SpriteManager.BallTex, slowRange, Color.Blue);
+           
         }
 
     }
