@@ -15,6 +15,7 @@ namespace TowerDefence
         private Vector2 moneyPos;
         private Vector2 avastTextPos;
         private Vector2 nordVPNTextPos;
+        public Rectangle levelUpButtonRect;
         private SpriteFont money_Font;
 
         private string avastText;
@@ -48,6 +49,7 @@ namespace TowerDefence
             moneyPos = new Vector2(1750, 10);
             money_Font = Content.Load<SpriteFont>("money_Font");
             waveTextPos = new Vector2(1550, 10);
+           
 
             avastText = Game1.avastPlaceCost.ToString();
             nordVpnText = Game1.nordVPNCost.ToString();
@@ -58,8 +60,8 @@ namespace TowerDefence
         }
         public void Update()
         {
+            levelUpButtonRect = new Rectangle(1710, 800, SpriteManager.LevelUpButtonTex.Width, SpriteManager.LevelUpButtonTex.Height);
 
-            
 
             if (avastIcon.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && Game1.money >= Game1.avastPlaceCost)
             {
@@ -88,16 +90,50 @@ namespace TowerDefence
 
         public void Draw(SpriteBatch _spriteBatch)
         {
+            string avastTowerText = "Avast Tower";
+            string nordTowerText = "Nord VPN Tower";
+
             _spriteBatch.DrawString(money_Font, "" + Game1.waveNum, waveTextPos, Color.Black);
             _spriteBatch.DrawString(money_Font, "$" + Game1.money, moneyPos, Color.Gold);
 
             switch (currentInfo)
             {
                 case TowerInfo.Avast:
-                    
+
+
+                    foreach (Towers tower in Game1.towersList)
+                    {
+                        if (tower is AvastTower && tower.infoClicked)
+                        {
+                            _spriteBatch.DrawString(money_Font, avastTowerText + "\nTower Level: " + tower.level, new Vector2(1860, 100), Color.White, 0f, money_Font.MeasureString(avastTowerText), 0.7f, SpriteEffects.None, 1f);
+
+                            if (tower.level < tower.maxLevel)
+                            {
+                                _spriteBatch.Draw(SpriteManager.LevelUpButtonTex, levelUpButtonRect, Color.White);
+                            }
+                          
+
+                        }
+
+                    }
+
                     break;
                 case TowerInfo.Nord:
-                    
+                    foreach (Towers tower in Game1.towersList )
+                    {
+                        if (tower is NordVPNTower && tower.infoClicked)
+                        {
+                            _spriteBatch.DrawString(money_Font, nordTowerText +"\n Tower Level: "+ tower.level, new Vector2(1896, 100), Color.White, 0f, money_Font.MeasureString(nordTowerText), 0.65f, SpriteEffects.None, 1f);
+
+                            if (tower.level < tower.maxLevel)
+                            {
+                                _spriteBatch.Draw(SpriteManager.LevelUpButtonTex, levelUpButtonRect, Color.White);
+                            }
+
+                        }
+
+                    }
+
                     break;
                 case TowerInfo.None:
 

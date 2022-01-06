@@ -41,7 +41,7 @@ namespace TowerDefence
       
         Towers avastSelected;
         Towers nordVPNSelected;
-        List<GameObject> towersList;
+        public static List<GameObject> towersList;
         List<NordVPNTower> nordList;
 
         //HUD
@@ -272,48 +272,7 @@ namespace TowerDefence
             }
 
 
-
-
-            
-            foreach (Towers towers in towersList)
-            {
-                rangeRect = new Rectangle((int)towers.pos.X-SpriteManager.RangeRing.Width*2, (int)towers.pos.Y - SpriteManager.RangeRing.Height*2, SpriteManager.RangeRing.Width * towers.rad, SpriteManager.RangeRing.Height * towers.rad);
-
-                
-                foreach (Enemys enemys in enemyList)
-                {
-                   
-
-
-                    if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
-                    {
-                        Debug.WriteLine(enemys.positionV2);
-
-                        towers.startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-                        if (towers.startAttackTimer >= towers.attackDelay)
-                        {
-                            towers.startAttackTimer -= towers.attackDelay;
-                            Debug.WriteLine("StartTimer" + towers.startAttackTimer);
-                            Debug.WriteLine("attack delay " + towers.attackDelay);
-                            Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
-                            Debug.WriteLine("Enemy in range");
-                            enemys.enemyHp--;
-
-                            break;
-
-                        }
-
-                    }
-
-
-
-
-                    }
-
-            }
-
-
-
+            TowerDamage(gameTime);
             DrawOnRenderTarget(); ///dasdadasad
         }
 
@@ -356,12 +315,8 @@ namespace TowerDefence
         {
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
-       
-
-
-
-
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
+            hudManager.Draw(_spriteBatch);
 
             foreach (Towers towers in towersList)
             {
@@ -371,21 +326,35 @@ namespace TowerDefence
 
                     _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, new Vector2(towers.texture.Width/4, towers.texture.Height/4), SpriteEffects.None, 1f);
 
-                    if (towers is NordVPNTower && towers.infoClicked)
-                    {
-                        Debug.WriteLine("Nord VPN tower");
-                        hudManager.currentInfo = HUDManager.TowerInfo.Nord;
-                    }
+
                     if (towers is AvastTower && towers.infoClicked)
                     {
                         Debug.WriteLine("Nord VPN tower");
                         hudManager.currentInfo = HUDManager.TowerInfo.Avast;
+
+                        if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
+                        {
+                            towers.level++;
+                            break;
+                        }
                     }
+                    if (towers is NordVPNTower && towers.infoClicked)
+                    {
+                        Debug.WriteLine("Nord VPN tower");
+                        hudManager.currentInfo = HUDManager.TowerInfo.Nord;
+
+                        if (KeyMouseReader.KeyPressed(Keys.M))
+                        {
+                            towers.level++;
+                            break;
+                        }
+                    }
+                  
 
                 }
             }
 
-            hudManager.Draw(_spriteBatch);
+            
 
 
 
@@ -493,20 +462,42 @@ namespace TowerDefence
 
 
                 }
-                else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && !hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y)&& KeyMouseReader.LeftClick())
                 {
                     towers.infoClicked = false;
                    
-                    hudManager.currentInfo = HUDManager.TowerInfo.None;
+                        hudManager.currentInfo = HUDManager.TowerInfo.None;
+                    
+                    
                     
                 }
-
-              
-
-
             }
+        }
 
+        public void TowerDamage(GameTime gameTime)
+        {
+            foreach (Towers towers in towersList)
+            {
+                foreach (Enemys enemys in enemyList)
+                {
+                    if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
+                    {
+                        Debug.WriteLine(enemys.positionV2);
+                        towers.startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+                        if (towers.startAttackTimer >= towers.attackDelay)
+                        {
+                            towers.startAttackTimer -= towers.attackDelay;
+                            Debug.WriteLine("StartTimer" + towers.startAttackTimer);
+                            Debug.WriteLine("attack delay " + towers.attackDelay);
+                            Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
+                            Debug.WriteLine("Enemy in range");
+                            enemys.enemyHp--;
 
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
 
