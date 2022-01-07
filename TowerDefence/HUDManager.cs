@@ -83,9 +83,6 @@ namespace TowerDefence
             //    default:
             //        break;
             //}
-
-
-
         }
 
         public void Draw(SpriteBatch _spriteBatch)

@@ -38,11 +38,14 @@ namespace TowerDefence
 
         RenderTarget2D renderTarget;
         GameObject gameObject;
+        Projectile projectile;
       
         Towers avastSelected;
         Towers nordVPNSelected;
         public static List<GameObject> towersList;
         List<NordVPNTower> nordList;
+
+        public static List<GameObject> projectileList;
 
         //HUD
         HUDManager hudManager;
@@ -106,6 +109,7 @@ namespace TowerDefence
            
             towersList = new List<GameObject>();
             enemyList = new List<Enemys>();
+            projectileList = new List<GameObject>();
 
             Debug.WriteLine(Window.ClientBounds.Width);
             Debug.WriteLine(Window.ClientBounds.Height);
@@ -201,9 +205,12 @@ namespace TowerDefence
                 wavemanager.startSpawnDuration = 0;
                 money += 150;
             }
+           
+
             if (spawnWaves)
             {
                 wavemanager.Update(gameTime);
+                
             }
             
 
@@ -225,6 +232,10 @@ namespace TowerDefence
 
             avastSelected.Update();
             nordVPNSelected.Update();
+            foreach (Projectile projectile in projectileList)
+            {
+                projectile.Update();
+            }
 
             switch (currentTowerSelected)
             {
@@ -239,7 +250,7 @@ namespace TowerDefence
                         if (CanPlace(avastSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150, 0 , 400));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150,0, 300));
                             Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
                             money -= avastPlaceCost;
@@ -256,7 +267,7 @@ namespace TowerDefence
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
-                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),250,0,200));
+                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),300,0,1500));
                             
                             Debug.WriteLine("placed");
                             Debug.WriteLine("Mouse pos" +KeyMouseReader.mouseState.X + KeyMouseReader.mouseState.Y);
@@ -271,8 +282,10 @@ namespace TowerDefence
                     break;
             }
 
-
+           
             TowerDamage(gameTime);
+           
+
             DrawOnRenderTarget(); ///dasdadasad
         }
 
@@ -302,9 +315,6 @@ namespace TowerDefence
                 default:
                     break;
             }
-
-
-           
 
             _spriteBatch.End();
 
@@ -343,18 +353,26 @@ namespace TowerDefence
                         Debug.WriteLine("Nord VPN tower");
                         hudManager.currentInfo = HUDManager.TowerInfo.Nord;
 
-                        if (KeyMouseReader.KeyPressed(Keys.M))
+
+                        if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
                         {
                             towers.level++;
                             break;
                         }
+
+
                     }
-                  
+
 
                 }
             }
+            foreach (Projectile projectile in projectileList)
+            {
+                projectile.Draw(_spriteBatch);
+            }
 
-            
+
+
 
 
 
@@ -387,12 +405,6 @@ namespace TowerDefence
             _spriteBatch.Begin();
 
 
-            //RoadTexture
-            //for (int i = 0; i < SplineManager.simplePath.endT; i += 10)
-            //{
-            //    Vector2 roadBallVector = SplineManager.simplePath.GetPos(roadBallPos + i);
-            //    _spriteBatch.Draw(SpriteManager.RoadTex, roadBallVector, null, new Color(0, 204, 0, 1), 0f, new Vector2(SpriteManager.RoadTex.Width / 2, SpriteManager.RoadTex.Height / 2), 1f, SpriteEffects.None, 0f);
-            //}
 
 
             // Spine ritas ut i rendertarget
@@ -405,25 +417,17 @@ namespace TowerDefence
                 twrs.Draw(_spriteBatch);
             }
 
-           
-
-
             foreach (Enemys enemys in enemyList)
             {
                 if (!(enemys.positionFloat >= SplineManager.simplePath.endT) && enemys.alive)
                 {
-
-                    enemys.Draw(_spriteBatch);
-                   
-                   // _spriteBatch.Draw(SpriteManager.TrojanTex, SplineManager.simplePath.GetPos(enemys.positionFloat), null, Color.White, enemyRotation, new Vector2(SpriteManager.TrojanTex.Width / 2, SpriteManager.TrojanTex.Height / 2), 1f, SpriteEffects.None, 1f);
-
+                    enemys.Draw(_spriteBatch); 
                 }
                 else
                 {
                     enemyList.Remove(enemys);
                     break;
-                }
-               
+                }  
             }
           
             _spriteBatch.End();
@@ -457,22 +461,16 @@ namespace TowerDefence
                     
                     Debug.WriteLine("Yoasdadaodaodmamd");
                     towers.infoClicked = true;
-                    
-                    
-
-
                 }
                 else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && !hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y)&& KeyMouseReader.LeftClick())
                 {
-                    towers.infoClicked = false;
-                   
-                        hudManager.currentInfo = HUDManager.TowerInfo.None;
-                    
-                    
-                    
+                    towers.infoClicked = false;                
+                    hudManager.currentInfo = HUDManager.TowerInfo.None;
                 }
             }
         }
+
+        
 
         public void TowerDamage(GameTime gameTime)
         {
@@ -483,22 +481,41 @@ namespace TowerDefence
                     if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
                     {
                         Debug.WriteLine(enemys.positionV2);
-                        towers.startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-                        if (towers.startAttackTimer >= towers.attackDelay)
-                        {
-                            towers.startAttackTimer -= towers.attackDelay;
-                            Debug.WriteLine("StartTimer" + towers.startAttackTimer);
-                            Debug.WriteLine("attack delay " + towers.attackDelay);
-                            Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
-                            Debug.WriteLine("Enemy in range");
-                            enemys.enemyHp--;
+                        towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos));
 
-                            break;
+                        if(towers is NordVPNTower)
+                        {
+                            enemys.SlowSpeed(gameTime);
                         }
+
+                        
+
+                        //Vector2 projectileDirection = Vector2.Subtract(enemys.pos, towers.pos);
+                        
+                        //return projectileDirection;
+
+                        //towers.startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+                        //if (towers.startAttackTimer >= towers.attackDelay)
+                        //{
+                        //    towers.startAttackTimer -= towers.attackDelay;
+                        //    Debug.WriteLine("StartTimer" + towers.startAttackTimer);
+                        //    Debug.WriteLine("attack delay " + towers.attackDelay);
+                        //    Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
+                        //    Debug.WriteLine("Enemy in range");
+                        //    enemys.TakeDamage();
+
+                        //    break;
+                        //}
+                    }
+                    else if (enemys.wasSlow)
+                    {
+                        enemys.NoIce(gameTime);
                     }
                 }
             }
         }
+
+       
 
 
     }

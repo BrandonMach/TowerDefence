@@ -15,16 +15,22 @@ namespace TowerDefence
         float nextFloatPosition;
         float rotation;
         public float speed;
+        public float startSpeed;
         public Rectangle splineHitbox;
         public float rad;
         public int enemyHp;
         Rectangle hpRect;
         public bool alive;
+        public bool wasSlow;
+
+        double startSlowTimer;
+        double slowEffectDuration;
 
         public Enemys(Texture2D texture, Vector2 position, Rectangle HitBox):base(texture, position, HitBox)
         {
 
             speed = 3;
+            startSpeed = speed;
             enemyHp = 20;
             alive = true;
 
@@ -32,6 +38,9 @@ namespace TowerDefence
             {
                 enemyHp = 25;
             }
+
+            startSlowTimer = 0;
+            slowEffectDuration = 1000;
         }
 
         public override void Update()
@@ -51,19 +60,45 @@ namespace TowerDefence
                 alive = false;
                 Game1.money += 25;
             }
-            if(speed<= 1)
+            
+        }
+
+        public void TakeDamage()
+        {
+            enemyHp--;
+        }
+        public void SlowSpeed(GameTime gameTime)
+        {
+            speed = 1.5f;
+            wasSlow = true;
+        }
+
+        public void NoIce(GameTime gameTime)
+        {
+            startSlowTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (startSlowTimer >= slowEffectDuration)
             {
-                speed = 1;
+                startSlowTimer -= slowEffectDuration;
+                speed = startSpeed;
             }
-           
         }
 
         public override void Draw(SpriteBatch _spriteBatch)
         {         
-                _spriteBatch.Draw(texture, SplineManager.simplePath.GetPos(positionFloat), null, Color.Blue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
-                _spriteBatch.Draw(texture, hitbox, Color.Red);
-                _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);
-            _spriteBatch.Draw(texture, positionV2, Color.Yellow);
+
+            if(speed > 1.5)
+            {
+                _spriteBatch.Draw(texture, SplineManager.simplePath.GetPos(positionFloat), null, Color.White, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
+                //_spriteBatch.Draw(texture, hitbox, Color.Red);
+            }
+            else
+            {
+                _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.LightBlue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
+                
+            }
+
+            _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);
+            //_spriteBatch.Draw(texture, positionV2, Color.Yellow);
         }
 
 

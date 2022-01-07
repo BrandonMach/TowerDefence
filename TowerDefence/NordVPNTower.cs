@@ -15,7 +15,7 @@ namespace TowerDefence
         public NordVPNTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad, attackTimer, attackDelay)
         {
             this.rad = rad;
-            level = 3;
+            
         }
 
         public override void Update()

@@ -10,7 +10,7 @@ namespace TowerDefence
     {
         Enemys enemys;
         double startSpawn = 0;
-        double spawnDelay = 0.5;
+        double spawnDelay = 0.7;
         public double startSpawnDuration = 0;
        // double spawnDuration = Game1.waveNum;
 
@@ -40,6 +40,7 @@ namespace TowerDefence
                 }
                 
             }
+           
             else
             {
                 Game1.spawnWaves = false;

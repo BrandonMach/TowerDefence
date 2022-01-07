@@ -17,9 +17,8 @@ namespace TowerDefence
         public bool infoClicked;
         public  int level;
         public int maxLevel;
-       
 
-        
+        Projectile projectile;
 
         public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox)
         {
@@ -30,6 +29,7 @@ namespace TowerDefence
             maxLevel = 3;
             level = 1;
             
+            
         }
 
         public override void Update()
@@ -39,17 +39,32 @@ namespace TowerDefence
             
 
             hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height);
-            
            
-
         }
 
+        public void StartAttack(GameTime gameTime, Enemys enemys, Vector2 direction)
+        {
+            //Vector2 projectileDirection = Vector2.Subtract(enemys.pos, pos);
+            startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (startAttackTimer >= attackDelay)
+            {
+                startAttackTimer -= attackDelay;
+                Debug.WriteLine("StartTimer" + startAttackTimer);
+                Debug.WriteLine("attack delay " + attackDelay);
+                // Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
 
+                projectile = new Projectile(SpriteManager.BallTex, pos, new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.BallTex.Width, SpriteManager.BallTex.Height), direction);
+                Game1.projectileList.Add(projectile);
+
+
+                Debug.WriteLine("Enemy in range");
+                enemys.TakeDamage();  
+            }
+        }
 
         public override void Draw(SpriteBatch _spriteBatch)
         {
-            base.Draw(_spriteBatch);
-            
+            base.Draw(_spriteBatch); 
         }
 
 
