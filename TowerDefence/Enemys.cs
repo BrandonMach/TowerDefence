@@ -63,7 +63,7 @@ namespace TowerDefence
             if(enemyHp <= 0)
             {
                 alive = false;
-                Game1.money += 25;
+                Game1.money += 15;
             }
             
         }

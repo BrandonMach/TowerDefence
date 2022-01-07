@@ -57,9 +57,6 @@ namespace TowerDefence
                 Debug.WriteLine("StartTimer" + startAttackTimer);
                 Debug.WriteLine("attack delay " + attackDelay);
                 // Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
-
-
-                
                 projectile = new Projectile(projectileTex, pos, new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.BallTex.Width, SpriteManager.BallTex.Height), direction, level);
                 Game1.projectileList.Add(projectile);
 

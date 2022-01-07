@@ -379,30 +379,33 @@ namespace TowerDefence
                             {
                                 money -= towers.avastLevel2Cost;
                                 towers.level++;
-                                towers.attackDelay = 150;
+                                towers.attackDelay = 200;
                             }
                             break;
                         }
 
                         if(hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                         {
-                            if(towers.level == 1)
+                            int sellLevel1 = avastPlaceCost - 29;
+                            int sellLevel2 = towers.avastLevel1Cost - 37;
+                            int sellLevel3 = towers.avastLevel2Cost - 112;
+                            if (towers.level == 1)
                             {
-                                money += avastPlaceCost -29;
+                                money += sellLevel1;
                                 towersList.Remove(towers);
                                 hudManager.currentInfo = HUDManager.TowerInfo.None;
                                 break;
                             }
                             if(towers.level == 2)
                             {
-                                money += towers.avastLevel1Cost - 37;
+                                money += sellLevel2;
                                 towersList.Remove(towers);
                                 hudManager.currentInfo = HUDManager.TowerInfo.None;
                                 break;
                             }
                             if(towers.level == 3)
                             {
-                                money += towers.avastLevel2Cost - 112;
+                                money += sellLevel3;
                                 towersList.Remove(towers);
                                 hudManager.currentInfo = HUDManager.TowerInfo.None;
                                 break;
@@ -435,34 +438,33 @@ namespace TowerDefence
                         }
                         if (hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                         {
+                            int sellLevel1 = nordVPNCost - 69;
+                            int sellLevel2 = towers.NordLevel1Cost - 75;
+                            int sellLevel3 = towers.NordLevel1Cost - 137;
+
                             if (towers.level == 1)
                             {
-                                money += nordVPNCost - 69;
+                                money += sellLevel1 ;
                                 towersList.Remove(towers);
                                 hudManager.currentInfo = HUDManager.TowerInfo.None;
                                 break;
                             }
                             if (towers.level == 2)
                             {
-                                money += towers.NordLevel1Cost - 75;
+                                money += sellLevel2;
                                 towersList.Remove(towers);
                                 hudManager.currentInfo = HUDManager.TowerInfo.None;
                                 break;
                             }
                             if (towers.level == 3)
                             {
-                                money += towers.NordLevel1Cost - 137;
+                                money += sellLevel3;
                                 towersList.Remove(towers);
                                 hudManager.currentInfo = HUDManager.TowerInfo.None;
                                 break;
                             }
-
                         }
-
-
                     }
-
-
                 }
             }
             foreach (Projectile projectile in projectileList)
@@ -484,7 +486,6 @@ namespace TowerDefence
                 default:
                     break;
             }
-
         }
 
         private void DrawOnRenderTarget()
