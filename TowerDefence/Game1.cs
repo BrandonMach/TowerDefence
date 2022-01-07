@@ -66,6 +66,8 @@ namespace TowerDefence
         float nextEnemyPos;
         
         public bool isPaused;
+
+        ParticleSystem particleSystem;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -116,6 +118,12 @@ namespace TowerDefence
             money = 0;
             wavemanager = new WaveManager();
             spawnWaves = false;
+
+            List<Texture2D> textures = new List<Texture2D>();
+            textures.Add(SpriteManager.CircleParticle);
+            textures.Add(SpriteManager.StarParticle);
+            textures.Add(SpriteManager.DiamondParticle);
+            particleSystem = new ParticleSystem(textures, new Vector2(400, 240));
 
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
             DrawOnRenderTarget();
@@ -178,7 +186,10 @@ namespace TowerDefence
 
             ClickInfo();
             hudManager.Update();
-           
+
+            particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            particleSystem.Update();
+
             if (KeyMouseReader.KeyPressed(Keys.Space))
             {
                 spawnWaves = true;
@@ -283,7 +294,12 @@ namespace TowerDefence
                         break;
                     }
                 }
-            }          
+            }
+
+            if (KeyMouseReader.KeyPressed(Keys.K))
+            {
+                
+            }
             DrawOnRenderTarget(); ///dasdadasad
         }
 
@@ -326,6 +342,7 @@ namespace TowerDefence
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
             hudManager.Draw(_spriteBatch);
 
+            particleSystem.Draw(_spriteBatch);
             foreach (Towers towers in towersList)
             {
                 if (towers.infoClicked)
@@ -507,6 +524,8 @@ namespace TowerDefence
                         if (towers is AvastTower)
                         {
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.AvastProjectile);
+                            
+                            
                         }
                         if (towers is NordVPNTower)
                         {

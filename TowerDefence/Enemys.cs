@@ -28,7 +28,6 @@ namespace TowerDefence
 
         public Enemys(Texture2D texture, Vector2 position, Rectangle HitBox):base(texture, position, HitBox)
         {
-
             speed = 3;
             startSpeed = speed;
             enemyHp = 20;
