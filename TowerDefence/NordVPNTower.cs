@@ -14,10 +14,8 @@ namespace TowerDefence
         
         public NordVPNTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad, attackTimer, attackDelay)
         {
-            this.rad = rad;
-            
+            this.rad = rad;     
         }
-
         public override void Update()
         {
             base.Update();
@@ -25,14 +23,8 @@ namespace TowerDefence
         }
         public void SlowEnemy()
         {
-            slowRange = new Rectangle((int)pos.X - SpriteManager.RangeRing.Width, (int)pos.Y - SpriteManager.RangeRing.Height, rad * SpriteManager.RangeRing.Width, rad * SpriteManager.RangeRing.Height);
-
-           
-              
+            slowRange = new Rectangle((int)pos.X - SpriteManager.RangeRing.Width, (int)pos.Y - SpriteManager.RangeRing.Height, rad * SpriteManager.RangeRing.Width, rad * SpriteManager.RangeRing.Height);    
         }
-
-
-
         public override void Draw(SpriteBatch _spriteBatch)
         {
 

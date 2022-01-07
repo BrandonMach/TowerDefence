@@ -235,6 +235,7 @@ namespace TowerDefence
             foreach (Projectile projectile in projectileList)
             {
                 projectile.Update();
+
             }
 
             switch (currentTowerSelected)
@@ -284,6 +285,18 @@ namespace TowerDefence
 
            
             TowerDamage(gameTime);
+
+            foreach (Projectile projectile in projectileList)
+            {
+
+                foreach (Enemys enemys in enemyList)
+                {
+                    if (enemys.hitbox.Contains(projectile.hitbox))
+                    {
+                        projectile.alive = false;
+                    }
+                }
+            }
            
 
             DrawOnRenderTarget(); ///dasdadasad
@@ -405,8 +418,6 @@ namespace TowerDefence
             _spriteBatch.Begin();
 
 
-
-
             // Spine ritas ut i rendertarget
             SplineManager.simplePath.Draw(_spriteBatch);
             //SplineManager.simplePath.DrawPoints(_spriteBatch);
@@ -481,12 +492,21 @@ namespace TowerDefence
                     if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
                     {
                         Debug.WriteLine(enemys.positionV2);
-                        towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos));
+                        //towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos));
 
-                        if(towers is NordVPNTower)
+                        if (towers is AvastTower)
+                        {
+
+                            towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.AvastProjectile);
+                        }
+
+                        if (towers is NordVPNTower)
                         {
                             enemys.SlowSpeed(gameTime);
+                            towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.SnowFlakeTex);
                         }
+                        
+                       
 
                         
 

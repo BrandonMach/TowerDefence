@@ -42,7 +42,7 @@ namespace TowerDefence
            
         }
 
-        public void StartAttack(GameTime gameTime, Enemys enemys, Vector2 direction)
+        public void StartAttack(GameTime gameTime, Enemys enemys, Vector2 direction, Texture2D projectileTex)
         {
             //Vector2 projectileDirection = Vector2.Subtract(enemys.pos, pos);
             startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -53,7 +53,9 @@ namespace TowerDefence
                 Debug.WriteLine("attack delay " + attackDelay);
                 // Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
 
-                projectile = new Projectile(SpriteManager.BallTex, pos, new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.BallTex.Width, SpriteManager.BallTex.Height), direction);
+
+                
+                projectile = new Projectile(projectileTex, pos, new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.BallTex.Width, SpriteManager.BallTex.Height), direction, level);
                 Game1.projectileList.Add(projectile);
 
 

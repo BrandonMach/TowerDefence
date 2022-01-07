@@ -48,7 +48,7 @@ namespace TowerDefence
             positionFloat += speed;
             nextFloatPosition = positionFloat + 1;
             rotation  = (float)Math.Atan2(SplineManager.simplePath.GetPos(nextFloatPosition).Y - SplineManager.simplePath.GetPos(positionFloat).Y, SplineManager.simplePath.GetPos(nextFloatPosition).X - SplineManager.simplePath.GetPos(positionFloat).X);
-            hitbox = new Rectangle((int)SplineManager.simplePath.GetPos(positionFloat).X - texture.Width / 2, (int)SplineManager.simplePath.GetPos(positionFloat).Y - texture.Height / 2, texture.Width, texture.Width);
+            hitbox = new Rectangle((int)SplineManager.simplePath.GetPos(positionFloat).X - texture.Width / 2, (int)SplineManager.simplePath.GetPos(positionFloat).Y - texture.Height / 2, texture.Width+20, texture.Width+20);
             positionV2 = new Vector2((int)SplineManager.simplePath.GetPos(positionFloat).X , (int)SplineManager.simplePath.GetPos(positionFloat).Y);
             rad = hitbox.Width / 2;
 
