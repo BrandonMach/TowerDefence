@@ -19,7 +19,6 @@ namespace TowerDefence
             End,
         }
         GameState currentGameState;
-
         public enum TowerSelect
         {
             None,
@@ -28,8 +27,6 @@ namespace TowerDefence
             Monkey, 
         }
         public static TowerSelect currentTowerSelected;
-
-
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -57,11 +54,7 @@ namespace TowerDefence
         public static int waveNum = 0;
         WaveManager wavemanager;
 
-
-
         public static bool spawnWaves;
-
-    
 
         Enemys enemys;
         public static List<Enemys> enemyList;
@@ -69,15 +62,10 @@ namespace TowerDefence
 
         public  Rectangle rangeRect;
         
-
-        //public SimplePath simplePath;
         float enemyPos; // move up the spline
         float nextEnemyPos;
         
-
         public bool isPaused;
-        
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -129,11 +117,8 @@ namespace TowerDefence
             wavemanager = new WaveManager();
             spawnWaves = false;
 
-
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
             DrawOnRenderTarget();
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -185,13 +170,9 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
-
-
             // TODO: Add your update logic here
             enemyPos += 5;
             nextEnemyPos = enemyPos + 1;
-        
-
             KeyMouseReader.Update();
             //gameObject.Update();
 
@@ -205,22 +186,17 @@ namespace TowerDefence
                 wavemanager.startSpawnDuration = 0;
                 money += 150;
             }
-           
-
             if (spawnWaves)
             {
-                wavemanager.Update(gameTime);
-                
+                wavemanager.Update(gameTime);               
             }
-            
-
-            if (KeyMouseReader.KeyPressed(Keys.S)) //Speed up enemys
-            {
-                foreach (Enemys enemys in enemyList)
-                {
-                    enemys.speed += 3;
-                }
-            }
+            //if (KeyMouseReader.KeyPressed(Keys.S)) //Speed up enemys
+            //{
+            //    foreach (Enemys enemys in enemyList)
+            //    {
+            //        enemys.speed += 3;
+            //    }
+            //}
             foreach (Enemys enemys in enemyList)
             {
                 enemys.Update();
@@ -357,16 +333,11 @@ namespace TowerDefence
                 if (towers.infoClicked)
                 {
                     rangeRect = new Rectangle((int)towers.pos.X , (int)towers.pos.Y ,  towers.rad*2 - SpriteManager.RangeRing.Width,  towers.rad*2- SpriteManager.RangeRing.Height);
-
                     _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, new Vector2(towers.texture.Width/4, towers.texture.Height/4), SpriteEffects.None, 1f);
-
 
                     if (towers is AvastTower && towers.infoClicked)
                     {
-
-                        Debug.WriteLine("Nord VPN tower");
                         hudManager.currentInfo = HUDManager.TowerInfo.Avast;
-
                         if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
                         {
                             if(towers.level == 1 && money >= towers.avastLevel1Cost)
@@ -387,30 +358,14 @@ namespace TowerDefence
                         if(hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                         {
                             int sellLevel1 = avastPlaceCost - 29;
-                            int sellLevel2 = towers.avastLevel1Cost - 37;
-                            int sellLevel3 = towers.avastLevel2Cost - 112;
-                            if (towers.level == 1)
-                            {
-                                money += sellLevel1;
-                                towersList.Remove(towers);
-                                hudManager.currentInfo = HUDManager.TowerInfo.None;
-                                break;
-                            }
-                            if(towers.level == 2)
-                            {
-                                money += sellLevel2;
-                                towersList.Remove(towers);
-                                hudManager.currentInfo = HUDManager.TowerInfo.None;
-                                break;
-                            }
-                            if(towers.level == 3)
-                            {
-                                money += sellLevel3;
-                                towersList.Remove(towers);
-                                hudManager.currentInfo = HUDManager.TowerInfo.None;
-                                break;
-                            }
+                            int sellLevel2 = sellLevel1 + towers.avastLevel1Cost - 37;
+                            int sellLevel3 = sellLevel2 + towers.avastLevel2Cost - 112;
 
+                            SellPrices(towers, sellLevel1, sellLevel2, sellLevel3);
+
+                            towersList.Remove(towers);
+                            hudManager.currentInfo = HUDManager.TowerInfo.None;
+                            break;
                         }
                     }
                     if (towers is NordVPNTower && towers.infoClicked)
@@ -439,30 +394,13 @@ namespace TowerDefence
                         if (hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                         {
                             int sellLevel1 = nordVPNCost - 69;
-                            int sellLevel2 = towers.NordLevel1Cost - 75;
-                            int sellLevel3 = towers.NordLevel1Cost - 137;
+                            int sellLevel2 = sellLevel1 + towers.NordLevel1Cost - 75;
+                            int sellLevel3 = sellLevel2+ towers.NordLevel1Cost - 137;
 
-                            if (towers.level == 1)
-                            {
-                                money += sellLevel1 ;
-                                towersList.Remove(towers);
-                                hudManager.currentInfo = HUDManager.TowerInfo.None;
-                                break;
-                            }
-                            if (towers.level == 2)
-                            {
-                                money += sellLevel2;
-                                towersList.Remove(towers);
-                                hudManager.currentInfo = HUDManager.TowerInfo.None;
-                                break;
-                            }
-                            if (towers.level == 3)
-                            {
-                                money += sellLevel3;
-                                towersList.Remove(towers);
-                                hudManager.currentInfo = HUDManager.TowerInfo.None;
-                                break;
-                            }
+                            SellPrices(towers, sellLevel1, sellLevel2, sellLevel3);
+                            towersList.Remove(towers);
+                            hudManager.currentInfo = HUDManager.TowerInfo.None;
+                            break;
                         }
                     }
                 }
@@ -520,8 +458,7 @@ namespace TowerDefence
             }
           
             _spriteBatch.End();
-            GraphicsDevice.SetRenderTarget(null);
-          
+            GraphicsDevice.SetRenderTarget(null);  
         }
 
         public bool CanPlace(Towers g)
@@ -556,8 +493,7 @@ namespace TowerDefence
                 }
             }
         }
-
-        
+ 
 
         public void TowerDamage(GameTime gameTime)
         {
@@ -572,10 +508,8 @@ namespace TowerDefence
 
                         if (towers is AvastTower)
                         {
-
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.AvastProjectile);
                         }
-
                         if (towers is NordVPNTower)
                         {
                             enemys.SlowSpeed(gameTime);
@@ -590,8 +524,20 @@ namespace TowerDefence
             }
         }
 
-       
-
-
+        public void SellPrices(Towers towers, int level1, int level2, int level3)
+        {
+            if (towers.level == 1)
+            {
+                money += level1; 
+            }
+            if (towers.level == 2)
+            {
+                money += level2;     
+            }
+            if (towers.level == 3)
+            {
+                money += level3;   
+            }
+        }
     }
 }
