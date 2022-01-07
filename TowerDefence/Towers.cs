@@ -18,6 +18,11 @@ namespace TowerDefence
         public  int level;
         public int maxLevel;
 
+        public  int avastLevel1Cost = 150;
+        public  int avastLevel2Cost = 450;
+        public  int NordLevel1Cost = 300;
+        public  int NordLevel2Cost = 550;
+
         Projectile projectile;
 
         public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox)

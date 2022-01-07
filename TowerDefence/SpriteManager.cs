@@ -22,6 +22,7 @@ namespace TowerDefence
             public static Texture2D RangeRing { get; private set; }
             public static Texture2D NordVPNTex { get; private set; }
             public static Texture2D LevelUpButtonTex { get; private set; }
+            public static Texture2D SellButtonTex { get; private set; }
             public static Texture2D SnowFlakeTex { get; private set; }
             public static Texture2D AvastProjectile { get; private set; }
 
@@ -42,6 +43,7 @@ namespace TowerDefence
                 LevelUpButtonTex = Content.Load <Texture2D>("LevelUpButton");
                 SnowFlakeTex = Content.Load <Texture2D>("snowflake");
                 AvastProjectile = Content.Load <Texture2D>("avastProjectile");
+                SellButtonTex = Content.Load <Texture2D>("sellButtton");
 
             }
         

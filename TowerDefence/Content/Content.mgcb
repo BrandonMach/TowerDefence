@@ -176,6 +176,18 @@
 /processorParam:TextureFormat=Color
 /build:roadTD.png
 
+#begin sellButtton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sellButtton.png
+
 #begin snowflake.png
 /importer:TextureImporter
 /processor:TextureProcessor

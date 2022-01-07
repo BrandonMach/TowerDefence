@@ -9,6 +9,7 @@ namespace TowerDefence
 {
     public class AvastTower: Towers
     {
+        
         public AvastTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad,attackTimer,attackDelay)
         {
             

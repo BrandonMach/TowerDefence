@@ -256,7 +256,12 @@ namespace TowerDefence
                             currentTowerSelected = TowerSelect.None;
                             money -= avastPlaceCost;
                         }
+                        else
+                        {
+                            currentTowerSelected = TowerSelect.None;
+                        }
                     }
+                    
 
                     break;
                 case TowerSelect.NordVPN:
@@ -276,8 +281,13 @@ namespace TowerDefence
                             currentTowerSelected = TowerSelect.None;
                             money -= nordVPNCost;
                         }
+                        else
+                        {
+                            currentTowerSelected = TowerSelect.None;
+                        }
                     }
-                   // Debug.WriteLine(towersList.Count);
+                    
+                    // Debug.WriteLine(towersList.Count);
                     break;
                 default:
                     break;
@@ -286,14 +296,15 @@ namespace TowerDefence
            
             TowerDamage(gameTime);
 
-            foreach (Projectile projectile in projectileList)
+            foreach (Enemys enemys in enemyList) 
             {
-
-                foreach (Enemys enemys in enemyList)
+                foreach(Projectile projectile in projectileList)
                 {
                     if (enemys.hitbox.Contains(projectile.hitbox))
                     {
                         projectile.alive = false;
+                        projectileList.Remove(projectile);
+                        break;
                     }
                 }
             }
@@ -352,13 +363,51 @@ namespace TowerDefence
 
                     if (towers is AvastTower && towers.infoClicked)
                     {
+
                         Debug.WriteLine("Nord VPN tower");
                         hudManager.currentInfo = HUDManager.TowerInfo.Avast;
 
                         if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
                         {
-                            towers.level++;
+                            if(towers.level == 1 && money >= towers.avastLevel1Cost)
+                            {
+                                money -= towers.avastLevel1Cost;
+                                towers.level++;
+                                towers.attackDelay = 250;
+                            } 
+                            if(towers.level == 2 && money >= towers.avastLevel2Cost)
+                            {
+                                money -= towers.avastLevel2Cost;
+                                towers.level++;
+                                towers.attackDelay = 150;
+                            }
                             break;
+                        }
+
+                        if(hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                        {
+                            if(towers.level == 1)
+                            {
+                                money += avastPlaceCost -29;
+                                towersList.Remove(towers);
+                                hudManager.currentInfo = HUDManager.TowerInfo.None;
+                                break;
+                            }
+                            if(towers.level == 2)
+                            {
+                                money += towers.avastLevel1Cost - 37;
+                                towersList.Remove(towers);
+                                hudManager.currentInfo = HUDManager.TowerInfo.None;
+                                break;
+                            }
+                            if(towers.level == 3)
+                            {
+                                money += towers.avastLevel2Cost - 112;
+                                towersList.Remove(towers);
+                                hudManager.currentInfo = HUDManager.TowerInfo.None;
+                                break;
+                            }
+
                         }
                     }
                     if (towers is NordVPNTower && towers.infoClicked)
@@ -369,8 +418,45 @@ namespace TowerDefence
 
                         if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
                         {
-                            towers.level++;
+                            if (towers.level == 1 && money >= towers.NordLevel1Cost)
+                            {
+                                money -= towers.NordLevel1Cost;
+                                towers.level++;
+                                towers.attackDelay = 1250;
+
+                            }
+                            if (towers.level == 2 && money >= towers.NordLevel2Cost)
+                            {
+                                money -= towers.NordLevel2Cost;
+                                towers.level++;
+                                towers.attackDelay = 850;
+                            }
                             break;
+                        }
+                        if (hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                        {
+                            if (towers.level == 1)
+                            {
+                                money += nordVPNCost - 69;
+                                towersList.Remove(towers);
+                                hudManager.currentInfo = HUDManager.TowerInfo.None;
+                                break;
+                            }
+                            if (towers.level == 2)
+                            {
+                                money += towers.NordLevel1Cost - 75;
+                                towersList.Remove(towers);
+                                hudManager.currentInfo = HUDManager.TowerInfo.None;
+                                break;
+                            }
+                            if (towers.level == 3)
+                            {
+                                money += towers.NordLevel1Cost - 137;
+                                towersList.Remove(towers);
+                                hudManager.currentInfo = HUDManager.TowerInfo.None;
+                                break;
+                            }
+
                         }
 
 
@@ -384,11 +470,6 @@ namespace TowerDefence
                 projectile.Draw(_spriteBatch);
             }
 
-
-
-
-
-
             switch (currentTowerSelected)
             {
                 case TowerSelect.None:
@@ -396,13 +477,9 @@ namespace TowerDefence
                 case TowerSelect.Avast:
                     //gameObject.Draw(_spriteBatch);
                     avastSelected.Draw(_spriteBatch);
-
-
                     break;
                 case TowerSelect.NordVPN:
                     nordVPNSelected.Draw(_spriteBatch);
-
-
                     break;
                 default:
                     break;
@@ -469,11 +546,9 @@ namespace TowerDefence
             {
                 if (towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                 {
-                    
-                    Debug.WriteLine("Yoasdadaodaodmamd");
                     towers.infoClicked = true;
                 }
-                else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && !hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y)&& KeyMouseReader.LeftClick())
+                else if (!towers.hitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && !hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y)&& KeyMouseReader.LeftClick() && !hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                 {
                     towers.infoClicked = false;                
                     hudManager.currentInfo = HUDManager.TowerInfo.None;
@@ -504,28 +579,7 @@ namespace TowerDefence
                         {
                             enemys.SlowSpeed(gameTime);
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.SnowFlakeTex);
-                        }
-                        
-                       
-
-                        
-
-                        //Vector2 projectileDirection = Vector2.Subtract(enemys.pos, towers.pos);
-                        
-                        //return projectileDirection;
-
-                        //towers.startAttackTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-                        //if (towers.startAttackTimer >= towers.attackDelay)
-                        //{
-                        //    towers.startAttackTimer -= towers.attackDelay;
-                        //    Debug.WriteLine("StartTimer" + towers.startAttackTimer);
-                        //    Debug.WriteLine("attack delay " + towers.attackDelay);
-                        //    Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
-                        //    Debug.WriteLine("Enemy in range");
-                        //    enemys.TakeDamage();
-
-                        //    break;
-                        //}
+                        }                      
                     }
                     else if (enemys.wasSlow)
                     {
