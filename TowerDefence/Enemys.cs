@@ -40,7 +40,7 @@ namespace TowerDefence
             }
             if(Game1.waveNum >= 10)
             {
-                enemyHp = 40;
+                enemyHp = 50;
                 speed = 5;
             }
 
@@ -75,7 +75,7 @@ namespace TowerDefence
         public void SlowSpeed(GameTime gameTime)
         {
 
-            if (Game1.waveNum >= 5)
+            if (Game1.waveNum <= 10)
             {
                 speed = 1.5f;
             }

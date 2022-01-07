@@ -283,9 +283,7 @@ namespace TowerDefence
                         break;
                     }
                 }
-            }
-           
-
+            }          
             DrawOnRenderTarget(); ///dasdadasad
         }
 
