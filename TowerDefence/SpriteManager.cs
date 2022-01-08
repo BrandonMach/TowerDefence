@@ -25,9 +25,9 @@ namespace TowerDefence
             public static Texture2D SellButtonTex { get; private set; }
             public static Texture2D SnowFlakeTex { get; private set; }
             public static Texture2D AvastProjectile { get; private set; }
-            public static Texture2D CircleParticle { get; private set; }
-            public static Texture2D StarParticle { get; private set; }
-            public static Texture2D DiamondParticle { get; private set; }
+            public static Texture2D DollarSignParticle { get; private set; }
+            
+           
 
 
         public static void LoadSprites(ContentManager Content)
@@ -47,9 +47,8 @@ namespace TowerDefence
                 SnowFlakeTex = Content.Load <Texture2D>("snowflake");
                 AvastProjectile = Content.Load <Texture2D>("avastProjectile");
                 SellButtonTex = Content.Load <Texture2D>("sellButtton");
-                CircleParticle = Content.Load <Texture2D>("circle");
-                StarParticle = Content.Load <Texture2D>("star");
-                DiamondParticle = Content.Load <Texture2D>("diamond");
+                DollarSignParticle = Content.Load<Texture2D>("DollarSign");
+                
 
             }
         

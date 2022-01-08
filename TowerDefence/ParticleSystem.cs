@@ -26,18 +26,19 @@ namespace TowerDefence
         {
             Texture2D texture = textures[random.Next(textures.Count)];
             Vector2 position = EmitterLocation;
-            Vector2 velocity = new Vector2( 1f * (float)(random.NextDouble() * 2 - 1), 1f * (float)(random.NextDouble() * 2 - 1));
+            Vector2 velocity = new Vector2( 5f * (float)(random.NextDouble() * 2 - 1), 1f * (float)(random.NextDouble() * 2 - 1));
             float angle = 0;
-            float angularVelocity = 0.1f * (float)(random.NextDouble() * 2 - 1);
-            Color color = new Color((float)random.NextDouble(), (float)random.NextDouble(),(float)random.NextDouble());
+            float angularVelocity = 0.5f * (float)(random.NextDouble() * 2 - 1);
+            //Color color = new Color((float)random.NextDouble(), (float)random.NextDouble(),(float)random.NextDouble());
+            Color color = Color.Gold;
             float size = (float)random.NextDouble();
-            int ttl = 20 + random.Next(40);
+            int ttl = 7 + random.Next(30);
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }
         public void Update()
         {
-            int total = 10;
+            int total = 3;
 
             for (int i = 0; i < total; i++)
             {

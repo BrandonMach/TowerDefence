@@ -68,6 +68,10 @@ namespace TowerDefence
         public bool isPaused;
 
         ParticleSystem particleSystem;
+        bool startParticleUpdate;
+
+        double startParticles = 0;
+        double particlesDuration = 0.25;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -120,10 +124,12 @@ namespace TowerDefence
             spawnWaves = false;
 
             List<Texture2D> textures = new List<Texture2D>();
-            textures.Add(SpriteManager.CircleParticle);
-            textures.Add(SpriteManager.StarParticle);
-            textures.Add(SpriteManager.DiamondParticle);
+            textures.Add(SpriteManager.DollarSignParticle);
+            textures.Add(SpriteManager.DollarSignParticle);
+            textures.Add(SpriteManager.DollarSignParticle);
+            
             particleSystem = new ParticleSystem(textures, new Vector2(400, 240));
+            startParticleUpdate = false;
 
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
             DrawOnRenderTarget();
@@ -187,8 +193,9 @@ namespace TowerDefence
             ClickInfo();
             hudManager.Update();
 
-            particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-            particleSystem.Update();
+            //particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            
+           
 
             if (KeyMouseReader.KeyPressed(Keys.Space))
             {
@@ -295,11 +302,20 @@ namespace TowerDefence
                     }
                 }
             }
-
-            if (KeyMouseReader.KeyPressed(Keys.K))
+          
+            if (startParticleUpdate)
             {
-                
+                startParticles += gameTime.ElapsedGameTime.TotalSeconds;
+                particleSystem.Update();
+
+                if (startParticles >= particlesDuration)
+                {
+                    startParticles -= particlesDuration;
+                    startParticleUpdate = false;
+                }
+
             }
+
             DrawOnRenderTarget(); ///dasdadasad
         }
 
@@ -337,12 +353,15 @@ namespace TowerDefence
 
         public void GameDraw(GameTime gameTime)
         {
+           
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
             hudManager.Draw(_spriteBatch);
 
-            particleSystem.Draw(_spriteBatch);
+          
+           
+
             foreach (Towers towers in towersList)
             {
                 if (towers.infoClicked)
@@ -360,12 +379,19 @@ namespace TowerDefence
                                 money -= towers.avastLevel1Cost;
                                 towers.level++;
                                 towers.attackDelay = 250;
+
+                                SpawnParticle();
+
+                               
+                               
+                                
                             } 
                             if(towers.level == 2 && money >= towers.avastLevel2Cost)
                             {
                                 money -= towers.avastLevel2Cost;
                                 towers.level++;
                                 towers.attackDelay = 200;
+                                SpawnParticle();
                             }
                             break;
                         }
@@ -396,6 +422,7 @@ namespace TowerDefence
                                 money -= towers.NordLevel1Cost;
                                 towers.level++;
                                 towers.attackDelay = 1250;
+                                SpawnParticle();
 
                             }
                             if (towers.level == 2 && money >= towers.NordLevel2Cost)
@@ -403,6 +430,7 @@ namespace TowerDefence
                                 money -= towers.NordLevel2Cost;
                                 towers.level++;
                                 towers.attackDelay = 850;
+                                SpawnParticle();
                             }
                             break;
                         }
@@ -424,7 +452,10 @@ namespace TowerDefence
             {
                 projectile.Draw(_spriteBatch);
             }
-
+            if (startParticleUpdate)
+            {
+                particleSystem.Draw(_spriteBatch);
+            }
             switch (currentTowerSelected)
             {
                 case TowerSelect.None:
@@ -521,23 +552,34 @@ namespace TowerDefence
                         Debug.WriteLine(enemys.positionV2);
                         //towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos));
 
+                        //startParticleUpdate = true;
+
                         if (towers is AvastTower)
                         {
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.AvastProjectile);
-                            
-                            
+                            //particleSystem.EmitterLocation = enemys.positionV2;
+
                         }
+                       
                         if (towers is NordVPNTower)
                         {
                             enemys.SlowSpeed(gameTime);
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.SnowFlakeTex);
-                        }                      
+                            //particleSystem.EmitterLocation = enemys.positionV2;
+                        }
+                       
                     }
                     else if (enemys.wasSlow)
                     {
                         enemys.NoIce(gameTime);
                     }
+                    
+                    
+                        
+                    
+
                 }
+                
             }
         }
 
@@ -555,6 +597,12 @@ namespace TowerDefence
             {
                 money += level3;   
             }
+        }
+
+        public void SpawnParticle()
+        {
+            particleSystem.EmitterLocation = new Vector2(hudManager.levelUpButtonRect.X + SpriteManager.LevelUpButtonTex.Width / 2, hudManager.levelUpButtonRect.Y + SpriteManager.LevelUpButtonTex.Height / 4);
+            startParticleUpdate = true;
         }
     }
 }

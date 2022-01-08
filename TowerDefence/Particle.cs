@@ -39,7 +39,7 @@ namespace TowerDefence
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Rectangle sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
+            Rectangle sourceRectangle = new Rectangle(0, 0, Texture.Width+3, Texture.Height+3);
             Vector2 origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
             spriteBatch.Draw(Texture, Position, sourceRectangle, Color, Angle, origin, Size, SpriteEffects.None, 0f);
