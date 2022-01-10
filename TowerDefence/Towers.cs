@@ -23,6 +23,12 @@ namespace TowerDefence
         public  int NordLevel1Cost = 300;
         public  int NordLevel2Cost = 550;
 
+        public int avastLvl2Rad = 180;
+        public int avastLvl3Att = 350;
+        public int nordLvl2Att = 1150;
+        public int nordLvl3Att = 450;
+
+
         Projectile projectile;
 
         public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox)
@@ -32,9 +38,7 @@ namespace TowerDefence
             infoClicked = false;
             this.rad = rad;
             maxLevel = 3;
-            level = 1;
-            
-            
+            level = 1;   
         }
 
         public override void Update()
