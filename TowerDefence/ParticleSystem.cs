@@ -32,7 +32,7 @@ namespace TowerDefence
             //Color color = new Color((float)random.NextDouble(), (float)random.NextDouble(),(float)random.NextDouble());
             Color color = Color.Gold;
             float size = (float)random.NextDouble();
-            int ttl = 7 + random.Next(30);
+            int ttl = 7 ;
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }

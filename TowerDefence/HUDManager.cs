@@ -24,6 +24,8 @@ namespace TowerDefence
         private string nordVpnText;
 
         private Vector2 waveTextPos;
+        private Vector2 heartPos;
+        private Vector2 livesTextPos;
 
         public  bool nordTowerClicked;
         public  bool avastTowerClicked;
@@ -43,8 +45,10 @@ namespace TowerDefence
             nordVPNTextPos = new Vector2(1810, 430);
             moneyPos = new Vector2(1750, 10);
             money_Font = Content.Load<SpriteFont>("money_Font");
-            waveTextPos = new Vector2(1550, 10);
+            waveTextPos = new Vector2(1450, 10);
             levelUpCostTextPos = new Vector2(1710, 750);
+            heartPos = new Vector2(1710, 65);
+            livesTextPos = new Vector2(1760, 65);
 
             avastText = Game1.avastPlaceCost.ToString();
             nordVpnText = Game1.nordVPNCost.ToString();
@@ -72,8 +76,10 @@ namespace TowerDefence
             string avastTowerText = "Avast Tower";
             string nordTowerText = "Nord VPN Tower";
 
-            _spriteBatch.DrawString(money_Font, "" + Game1.waveNum, waveTextPos, Color.Black);
+            _spriteBatch.DrawString(money_Font, "Wave " + Game1.waveNum +"/10", waveTextPos , Color.Black);
             _spriteBatch.DrawString(money_Font, "$" + Game1.money, moneyPos, Color.Gold);
+            _spriteBatch.Draw(SpriteManager.Heart,heartPos , Color.Red);
+            _spriteBatch.DrawString(money_Font, "" + Game1.lives, livesTextPos, Color.Red);
 
             switch (currentInfo)
             {
@@ -82,10 +88,11 @@ namespace TowerDefence
                     {
                         string avastLevel1Text = "$" + tower.avastLevel1Cost;
                         string avastLevel2Text = "$" + tower.avastLevel2Cost;
+                        Vector2 avastInfoPos = new Vector2(1860, 140);
 
                         if (tower is AvastTower && tower.infoClicked)
                         {
-                            _spriteBatch.DrawString(money_Font, avastTowerText + "\nTower Level: " + tower.level, new Vector2(1860, 100), Color.White, 0f, money_Font.MeasureString(avastTowerText), 0.7f, SpriteEffects.None, 1f);
+                            _spriteBatch.DrawString(money_Font, avastTowerText + "\nTower Level: " + tower.level, avastInfoPos, Color.White, 0f, money_Font.MeasureString(avastTowerText), 0.7f, SpriteEffects.None, 1f);
                             LevelManager(tower, _spriteBatch, avastLevel1Text, avastLevel2Text,tower.avastLevel1Cost,tower.avastLevel2Cost);
                             _spriteBatch.Draw(SpriteManager.SellButtonTex, sellButtonRect, Color.White);
                         }
@@ -97,10 +104,11 @@ namespace TowerDefence
                     {
                         string nordLevel1Text = "$" + tower.NordLevel1Cost;
                         string nordLevel2Text = "$" + tower.NordLevel2Cost;
+                        Vector2 nordInfoTextPos = new Vector2(1896, 140);
 
                         if (tower is NordVPNTower && tower.infoClicked)
                         {
-                            _spriteBatch.DrawString(money_Font, nordTowerText +"\n Tower Level: "+ tower.level, new Vector2(1896, 100), Color.White, 0f, money_Font.MeasureString(nordTowerText), 0.65f, SpriteEffects.None, 1f);
+                            _spriteBatch.DrawString(money_Font, nordTowerText +"\n Tower Level: "+ tower.level,nordInfoTextPos, Color.White, 0f, money_Font.MeasureString(nordTowerText), 0.65f, SpriteEffects.None, 1f);
                             LevelManager(tower, _spriteBatch, nordLevel1Text, nordLevel2Text,tower.NordLevel1Cost,tower.NordLevel2Cost);
                             _spriteBatch.Draw(SpriteManager.SellButtonTex, sellButtonRect, Color.White);
                         }

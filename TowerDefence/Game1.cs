@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Spline;
 using System;
 using System.Collections.Generic;
@@ -74,6 +76,7 @@ namespace TowerDefence
 
         double startParticles = 0;
         double particlesDuration = 0.25;
+        public static int lives;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -125,8 +128,10 @@ namespace TowerDefence
             wavemanager = new WaveManager();
             spawnWaves = false;
 
+            lives = 10;
+
             List<Texture2D> textures = new List<Texture2D>();
-            textures.Add(SpriteManager.DollarSignParticle);
+            textures.Add(SpriteManager.BallTex);
             textures.Add(SpriteManager.DollarSignParticle);
             textures.Add(SpriteManager.DollarSignParticle);
             
@@ -141,20 +146,22 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
-            mousePosCursor = new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);
+            
             switch (currentGameState)
             { 
                 case GameState.StartMenu:
-                   
                     if (myForm1.PlayerName != "")
                     {
                         Window.Title = "Player: " + myForm1.PlayerName;
                         currentGameState = GameState.Game;
                         isPaused = false;
                         money = startingMoney;
+                        MediaPlayer.Play(SpriteManager.MainTheme);
                     }
+                   
                     break;
-                case GameState.Game:                  
+                case GameState.Game:
+                    
                     if(!isPaused)
                     {
                         GameUpdate(gameTime);
@@ -178,6 +185,7 @@ namespace TowerDefence
                 default:
                     break;
             }
+            mousePosCursor = new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);
             base.Update(gameTime);
         }
 
@@ -190,14 +198,9 @@ namespace TowerDefence
             enemyPos += 5;
             nextEnemyPos = enemyPos + 1;
             KeyMouseReader.Update();
-            //gameObject.Update();
 
             ClickInfo();
             hudManager.Update();
-
-            //particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-
-
 
             if (KeyMouseReader.KeyPressed(Keys.Space) && enemyList.Count == 0)
             {
@@ -214,8 +217,6 @@ namespace TowerDefence
             {
                 enemys.Update();
             }
-
-
             //How many enemys alive
             Debug.WriteLine(enemyList.Count);
 
@@ -244,6 +245,7 @@ namespace TowerDefence
                             Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
                             money -= avastPlaceCost;
+                            SpriteManager.PlacingSound.Play();
                         }
                         else
                         {
@@ -269,6 +271,7 @@ namespace TowerDefence
                             Debug.WriteLine("tower" + newPosition);
                             currentTowerSelected = TowerSelect.None;
                             money -= nordVPNCost;
+                            SpriteManager.PlacingSound.Play();
                         }
                         else
                         {
@@ -493,6 +496,7 @@ namespace TowerDefence
                 }
                 else
                 {
+                   
                     enemyList.Remove(enemys);
                     break;
                 }  
@@ -586,6 +590,7 @@ namespace TowerDefence
         {
             particleSystem.EmitterLocation = new Vector2(hudManager.levelUpButtonRect.X + SpriteManager.LevelUpButtonTex.Width / 2, hudManager.levelUpButtonRect.Y + SpriteManager.LevelUpButtonTex.Height / 4);
             startParticleUpdate = true;
+            SpriteManager.CashSound.Play();
         }
 
       

@@ -73,6 +73,12 @@
 /processorParam:TextureFormat=Color
 /build:bloonsMonkey.png
 
+#begin Cash Register.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Cash Register.wav
+
 #begin circle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -193,6 +199,30 @@
 /processorParam:TextureFormat=Color
 /build:loadingHP.jpg
 
+#begin marioHeart.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:marioHeart.png
+
+#begin Microsoft Windows 95 Passport.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Microsoft Windows 95 Passport.mp3
+
+#begin Microsoft Windows 95.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Microsoft Windows 95.mp3
+
 #begin money_Font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -223,6 +253,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pauseTD.png
+
+#begin PlacingSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:PlacingSound.wav
 
 #begin road.png
 /importer:TextureImporter

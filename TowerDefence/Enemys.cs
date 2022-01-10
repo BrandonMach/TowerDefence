@@ -27,8 +27,8 @@ namespace TowerDefence
 
         double startSlowTimer;
         double slowEffectDuration;
-        bool bossEnemy;
-        Enemys smallEnemy;
+
+        
 
         bool frozen;
 
@@ -48,14 +48,10 @@ namespace TowerDefence
                 enemyHp = 50;
                 speed = 5;
             }
-           
-
             startSlowTimer = 0;
             slowEffectDuration = 1000;
-            bossEnemy=false;
             frozen = false;
-            maxHealth = enemyHp;
-            
+            maxHealth = enemyHp;     
         }
 
         public override void Update()
@@ -67,29 +63,17 @@ namespace TowerDefence
             positionV2 = new Vector2((int)SplineManager.simplePath.GetPos(positionFloat).X , (int)SplineManager.simplePath.GetPos(positionFloat).Y);
             rad = hitbox.Width / 2;
 
-
             hpRect = new Rectangle((int)positionV2.X, (int)positionV2.Y-70, enemyHp, 10);
             hpbackDrop = new Rectangle((int)positionV2.X, (int)positionV2.Y - 70, maxHealth, 10);
-
-
-            if (Game1.waveNum == 3)
-            {
-                bossEnemy = true;
-            }
-            
-
-            if (enemyHp <= 0 && !bossEnemy)
+            if (enemyHp <= 0)
             {
                 alive = false;
                 Game1.money += 15;
             }
-
-            if(bossEnemy && enemyHp <= 0)
+            if (positionFloat >= SplineManager.simplePath.endT && alive)
             {
-                alive = false;
-                Game1.money += 25;
-                
-            } 
+                Game1.lives--;
+            }
         }
 
         public void TakeDamage()
@@ -104,7 +88,7 @@ namespace TowerDefence
                 speed = 1.5f;
                 frozen = true;
             }
-            if (Game1.waveNum >= 10 && !bossEnemy)
+            if (Game1.waveNum >= 10)
             {
                 speed = 3.5f;
                 frozen = true;
@@ -126,12 +110,8 @@ namespace TowerDefence
 
         public override void Draw(SpriteBatch _spriteBatch)
         {
-            if (bossEnemy)
-            {
-                _spriteBatch.Draw(texture, SplineManager.simplePath.GetPos(positionFloat), null, Color.Blue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
-             
-            }     
-            else if(/*speed == 1.5f && Game1.waveNum <= 5 || speed == 3.5f && Game1.waveNum <= 10*/ frozen)
+
+            if(frozen)
             {
                 _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.LightBlue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
                 
@@ -144,7 +124,6 @@ namespace TowerDefence
             _spriteBatch.Draw(SpriteManager.HPBarTex, hpbackDrop, Color.Black);
             _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);
             
-            //_spriteBatch.Draw(texture, positionV2, Color.Yellow);
         }
 
        

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace TowerDefence
 {
@@ -27,6 +29,12 @@ namespace TowerDefence
             public static Texture2D AvastProjectile { get; private set; }
             public static Texture2D DollarSignParticle { get; private set; }
             public static Texture2D Cursor { get; private set; }
+            public static Texture2D Heart { get; private set; }
+            public static Song StartUpTheme { get; private set; }
+            public static Song MainTheme { get; private set; }
+            public static SoundEffect PlacingSound { get; private set; }
+            public static SoundEffect CashSound { get; private set; }
+
 
 
 
@@ -50,6 +58,14 @@ namespace TowerDefence
                 SellButtonTex = Content.Load <Texture2D>("sellButtton");
                 DollarSignParticle = Content.Load<Texture2D>("DollarSign");
                 Cursor = Content.Load<Texture2D>("fingerCursor");
+                Heart = Content.Load<Texture2D>("marioHeart");
+                StartUpTheme = Content.Load<Song>("Microsoft Windows 95");
+                MainTheme = Content.Load<Song>("Microsoft Windows 95 Passport");
+                PlacingSound = Content.Load<SoundEffect>("PlacingSound");
+                CashSound = Content.Load<SoundEffect>("Cash Register");
+
+                MediaPlayer.Volume = 0.1f;
+                MediaPlayer.Play(StartUpTheme);
 
 
         }
