@@ -29,7 +29,7 @@ namespace TowerDefence
             Vector2 velocity = new Vector2( 5f * (float)(random.NextDouble() * 2 - 1), 1f * (float)(random.NextDouble() * 2 - 1));
             float angle = 0;
             float angularVelocity = 0.5f * (float)(random.NextDouble() * 2 - 1);
-            //Color color = new Color((float)random.NextDouble(), (float)random.NextDouble(),(float)random.NextDouble());
+         
             Color color = Color.Gold;
             float size = (float)random.NextDouble();
             int ttl = 7 ;

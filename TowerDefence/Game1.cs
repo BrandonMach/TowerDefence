@@ -132,8 +132,8 @@ namespace TowerDefence
 
             List<Texture2D> textures = new List<Texture2D>();
             textures.Add(SpriteManager.BallTex);
-            textures.Add(SpriteManager.DollarSignParticle);
-            textures.Add(SpriteManager.DollarSignParticle);
+            textures.Add(SpriteManager.BallTex);
+            textures.Add(SpriteManager.BallTex);
             
             particleSystem = new ParticleSystem(textures, new Vector2(400, 240));
             startParticleUpdate = false;
@@ -181,6 +181,7 @@ namespace TowerDefence
                     }
                     break;
                 case GameState.End:
+                    KeyMouseReader.Update();
                     break;
                 default:
                     break;
@@ -201,7 +202,10 @@ namespace TowerDefence
 
             ClickInfo();
             hudManager.Update();
-
+            if (KeyMouseReader.KeyPressed(Keys.D9) )
+            {
+                currentGameState = GameState.End;
+            }
             if (KeyMouseReader.KeyPressed(Keys.Space) && enemyList.Count == 0)
             {
                 spawnWaves = true;
@@ -340,7 +344,9 @@ namespace TowerDefence
                     _spriteBatch.Draw(SpriteManager.PauseWindowTex, new Vector2(SpriteManager.PauseWindowTex.Width/2, SpriteManager.PauseWindowTex.Height), Color.White);
                     _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
-                case GameState.End:
+                case GameState.End:           
+                    GraphicsDevice.Clear(backgroundColor);
+                    _spriteBatch.Draw(SpriteManager.GameOverTex, Vector2.Zero, Color.White);
                     _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
                 default:

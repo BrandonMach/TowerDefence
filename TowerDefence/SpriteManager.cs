@@ -30,6 +30,7 @@ namespace TowerDefence
             public static Texture2D DollarSignParticle { get; private set; }
             public static Texture2D Cursor { get; private set; }
             public static Texture2D Heart { get; private set; }
+            public static Texture2D GameOverTex { get; private set; }
             public static Song StartUpTheme { get; private set; }
             public static Song MainTheme { get; private set; }
             public static SoundEffect PlacingSound { get; private set; }
@@ -45,7 +46,7 @@ namespace TowerDefence
                 BackgroundTex = Content.Load<Texture2D>("wd95");
                 TrojanTex = Content.Load<Texture2D>("trojanHorse");
                 TrojanIceTex = Content.Load<Texture2D>("trojanHorseIce");
-                BallTex = Content.Load<Texture2D>("ball");
+                BallTex = Content.Load<Texture2D>("BigDollar");
                 AvastTex = Content.Load<Texture2D>("avastLogo");
                 PauseWindowTex = Content.Load<Texture2D>("pauseTD");
                 RoadTex = Content.Load<Texture2D>("road");
@@ -59,6 +60,7 @@ namespace TowerDefence
                 DollarSignParticle = Content.Load<Texture2D>("DollarSign");
                 Cursor = Content.Load<Texture2D>("fingerCursor");
                 Heart = Content.Load<Texture2D>("marioHeart");
+                GameOverTex = Content.Load<Texture2D>("GameOverTD");
                 StartUpTheme = Content.Load<Song>("Microsoft Windows 95");
                 MainTheme = Content.Load<Song>("Microsoft Windows 95 Passport");
                 PlacingSound = Content.Load<SoundEffect>("PlacingSound");
