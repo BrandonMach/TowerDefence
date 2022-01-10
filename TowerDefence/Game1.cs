@@ -91,7 +91,6 @@ namespace TowerDefence
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
         }
-
         protected override void Initialize()
         {
             base.Initialize();
