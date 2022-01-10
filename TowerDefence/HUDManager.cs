@@ -60,7 +60,6 @@ namespace TowerDefence
         {
             levelUpButtonRect = new Rectangle(1710, 800, SpriteManager.LevelUpButtonTex.Width, SpriteManager.LevelUpButtonTex.Height);
             sellButtonRect = new Rectangle(1710, 865, SpriteManager.SellButtonTex.Width, SpriteManager.SellButtonTex.Height);
-
             if (avastIcon.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && Game1.money >= Game1.avastPlaceCost)
             {
                 Game1.currentTowerSelected = Game1.TowerSelect.Avast;
@@ -97,7 +96,6 @@ namespace TowerDefence
                             _spriteBatch.Draw(SpriteManager.SellButtonTex, sellButtonRect, Color.White);
                         }
                     }
-
                     break;
                 case TowerInfo.Nord:
                     foreach (Towers tower in Game1.towersList )
@@ -105,7 +103,6 @@ namespace TowerDefence
                         string nordLevel1Text = "$" + tower.NordLevel1Cost;
                         string nordLevel2Text = "$" + tower.NordLevel2Cost;
                         Vector2 nordInfoTextPos = new Vector2(1896, 140);
-
                         if (tower is NordVPNTower && tower.infoClicked)
                         {
                             _spriteBatch.DrawString(money_Font, nordTowerText +"\n Tower Level: "+ tower.level,nordInfoTextPos, Color.White, 0f, money_Font.MeasureString(nordTowerText), 0.65f, SpriteEffects.None, 1f);
@@ -113,10 +110,8 @@ namespace TowerDefence
                             _spriteBatch.Draw(SpriteManager.SellButtonTex, sellButtonRect, Color.White);
                         }
                     }
-
                     break;
                 case TowerInfo.None:
-
                     _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.White);
                     _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.White);
                     if (Game1.money <= Game1.avastPlaceCost)
@@ -127,10 +122,8 @@ namespace TowerDefence
                     {
                         _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.Red);
                     }
-
                     _spriteBatch.DrawString(money_Font, "$" + Game1.avastPlaceCost, avastTextPos, Color.Gold, 0f, money_Font.MeasureString(avastText), 0.7f, SpriteEffects.None, 1f);
                     _spriteBatch.DrawString(money_Font, "$" + Game1.nordVPNCost, nordVPNTextPos, Color.Gold, 0f, money_Font.MeasureString(nordVpnText), 0.7f, SpriteEffects.None, 1f);
-
                     break;
             }
         }
@@ -141,7 +134,6 @@ namespace TowerDefence
             {
                 _spriteBatch.Draw(SpriteManager.LevelUpButtonTex, levelUpButtonRect, Color.White);
             }
-
             if (tower.level == 1)
             {   
                 if(Game1.money >= level1Cost)
@@ -152,8 +144,6 @@ namespace TowerDefence
                 {
                     _spriteBatch.DrawString(money_Font, level1Text, levelUpCostTextPos, Color.Red);
                 }
-                
-
             }
             if (tower.level == 2)
             {
@@ -166,7 +156,6 @@ namespace TowerDefence
                     _spriteBatch.DrawString(money_Font, level2Text, levelUpCostTextPos, Color.Red);
                 }
             }
-
         }
     }
 }

@@ -12,21 +12,13 @@ namespace TowerDefence
         double startSpawn = 0;
         double spawnDelay = 0.7;
         public double startSpawnDuration = 0;
-       // double spawnDuration = Game1.waveNum;
-
-
-
         public void Update(GameTime gamTime)
-        {
-            
-            SpawnWave(Game1.waveNum, gamTime);
-           
+        {     
+            SpawnWave(Game1.waveNum, gamTime);         
         }
-
         public void SpawnWave(int waveNummber, GameTime gameTime)
         {
-            startSpawnDuration += gameTime.ElapsedGameTime.TotalSeconds;
-            
+            startSpawnDuration += gameTime.ElapsedGameTime.TotalSeconds;           
             if(startSpawnDuration < waveNummber/2 +1)
             {
                 startSpawn += gameTime.ElapsedGameTime.TotalSeconds;
@@ -36,18 +28,12 @@ namespace TowerDefence
                     enemys = new Enemys(SpriteManager.TrojanTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.TrojanTex.Width, SpriteManager.TrojanTex.Height));
                     Game1.enemyList.Add(enemys);
                     Debug.WriteLine(Game1.enemyList.Count);
-
-                }
-                
-            }
-           
+                }              
+            }         
             else
             {
                 Game1.spawnWaves = false;
-            }
-
-           
-        }
-           
+            } 
+        }     
     }
 }

@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:../../../../../Downloads/rangeRing.png;rangeRing.png
 
+#begin ../../../../../Downloads/WhiteBlock.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../Downloads/WhiteBlock.png;WhiteBlock.png
+
 #begin avastLogo.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -126,6 +138,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Code1.png
+
+#begin Dial Up.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Dial Up.wav
 
 #begin diamond.png
 /importer:TextureImporter
@@ -308,6 +326,13 @@
 /processorParam:TextureFormat=Color
 /build:roadTD.png
 
+#begin score_Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:score_Font.spritefont
+
 #begin sellButtton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -380,6 +405,30 @@
 /processorParam:TextureFormat=Color
 /build:trojanHorseIce.png
 
+#begin UpdateBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UpdateBar.png
+
+#begin Updating.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Updating.png
+
 #begin wd95.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -391,4 +440,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:wd95.jpg
+
+#begin Windows 95 - Error Sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Windows 95 - Error Sound.wav
 

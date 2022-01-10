@@ -58,17 +58,24 @@ namespace TowerDefence
         WaveManager wavemanager;
 
         Vector2 mousePosCursor;
+        
+        //Win Screen
+        Vector2 updatingPos;
+        int bars;
+        double startUpdating;
+        double startUpdateOneBar;
+        double updatingDuration;
+        double updatingFinished;
+        SpriteFont score_Font;
+        int totalMoneySpent;
+        int maxlives;
 
         public static bool spawnWaves;
 
-        Enemys enemys;
         public static List<Enemys> enemyList;
         Color backgroundColor;
 
-        public  Rectangle rangeRect;
-        
-        float enemyPos; // move up the spline
-        float nextEnemyPos;
+        public  Rectangle rangeRect;      
         
         public bool isPaused;
 
@@ -87,11 +94,8 @@ namespace TowerDefence
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
-
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -101,7 +105,6 @@ namespace TowerDefence
 
             // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
-            //simplePath = new SimplePath(GraphicsDevice);
             _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width + hudWith;
             _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height;
             _graphics.ApplyChanges();
@@ -130,6 +133,7 @@ namespace TowerDefence
             spawnWaves = false;
 
             lives = 10;
+            maxlives = 10;
 
             List<Texture2D> textures = new List<Texture2D>();
             textures.Add(SpriteManager.BallTex);
@@ -138,6 +142,14 @@ namespace TowerDefence
             
             particleSystem = new ParticleSystem(textures, new Vector2(400, 240));
             startParticleUpdate = false;
+
+            updatingPos = new Vector2(Window.ClientBounds.Width / 2 - SpriteManager.WinTex.Width, 100);
+            bars = 0;
+            startUpdating = 0;
+            startUpdateOneBar = 0;
+            updatingDuration = .5;
+            updatingFinished = 20;
+            score_Font = Content.Load<SpriteFont>("score_Font");
 
             renderTarget = new RenderTarget2D(GraphicsDevice,Window.ClientBounds.Width+300, Window.ClientBounds.Height+300);
             DrawOnRenderTarget();
@@ -169,11 +181,13 @@ namespace TowerDefence
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                     {
                         currentGameState = GameState.Pause;
+                        SpriteManager.ErrorSound.Play();
                         isPaused = true;                    
                     }
                     break;
                 case GameState.Pause:
                     KeyMouseReader.Update();
+                    
                     if (KeyMouseReader.KeyPressed(Keys.Escape))
                     {
                         currentGameState = GameState.Game;
@@ -187,6 +201,18 @@ namespace TowerDefence
                 case GameState.Win:
                     MediaPlayer.Stop();
                     KeyMouseReader.Update();
+                    startUpdateOneBar += gameTime.ElapsedGameTime.TotalSeconds;
+                    startUpdating += gameTime.ElapsedGameTime.TotalSeconds;
+
+                    if (startUpdating < updatingFinished && bars < 26)
+                    {
+                       
+                        if (startUpdateOneBar >= updatingDuration)
+                        {
+                            startUpdateOneBar -= updatingDuration;
+                            bars++;
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -194,15 +220,11 @@ namespace TowerDefence
             mousePosCursor = new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);
             base.Update(gameTime);
         }
-
-
         public void GameUpdate(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
-            // TODO: Add your update logic here
-            enemyPos += 5;
-            nextEnemyPos = enemyPos + 1;
+          
             KeyMouseReader.Update();
 
             ClickInfo();
@@ -211,11 +233,16 @@ namespace TowerDefence
             {
                 currentGameState = GameState.GameOver;
             }
+            if (KeyMouseReader.KeyPressed(Keys.D0) )
+            {
+                currentGameState = GameState.Win;
+                SpriteManager.DialUpSound.Play();
+            }
+
             if (KeyMouseReader.KeyPressed(Keys.Space) && enemyList.Count == 0)
             {
                 spawnWaves = true;
-                waveNum++;
-               
+                waveNum++;      
                 money += 150;
                 wavemanager.startSpawnDuration = 0;
             }
@@ -223,6 +250,7 @@ namespace TowerDefence
             {
                 Debug.WriteLine("gameOver");
                 currentGameState = GameState.Win;
+                SpriteManager.DialUpSound.Play();
             }
             if (spawnWaves)
             {
@@ -232,33 +260,27 @@ namespace TowerDefence
             {
                 enemys.Update();
             }
-            //How many enemys alive
-            Debug.WriteLine(enemyList.Count);
 
             avastSelected.Update();
             nordVPNSelected.Update();
             foreach (Projectile projectile in projectileList)
             {
                 projectile.Update();
-
-            }
-            
+            }  
 
             switch (currentTowerSelected)
             {
                 case TowerSelect.None:
                     break;
                 case TowerSelect.Avast:
-
                     avastSelected.Update();
-                    //för alla gameobjects bredd och höjd i Mouse.GetState()
                     if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + avastSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + avastSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - avastSelected.texture.Width / 2 - hudWith && money >= avastPlaceCost)
                     {                      
                         if (CanPlace(avastSelected))
                         {
+                            totalMoneySpent += avastPlaceCost;
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
                             towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150,0, 400));
-                            Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
                             money -= avastPlaceCost;
                             SpriteManager.PlacingSound.Play();
@@ -268,22 +290,16 @@ namespace TowerDefence
                             currentTowerSelected = TowerSelect.None;
                         }
                     }
-                    
-
                     break;
                 case TowerSelect.NordVPN:
                      nordVPNSelected.Update();
-                    //för alla gameobjects bredd och höjd i Mouse.GetState()
                     if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + nordVPNSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + nordVPNSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - nordVPNSelected.texture.Width / 2-hudWith && money >= nordVPNCost)
                     {       
                         if (CanPlace(nordVPNSelected))
                         {
+                            totalMoneySpent += nordVPNCost;
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-
                             towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),300,0,1500));   
-                            Debug.WriteLine("placed");
-                            Debug.WriteLine("Mouse pos" +KeyMouseReader.mouseState.X + KeyMouseReader.mouseState.Y);
-                            Debug.WriteLine("tower" + newPosition);
                             currentTowerSelected = TowerSelect.None;
                             money -= nordVPNCost;
                             SpriteManager.PlacingSound.Play();
@@ -293,14 +309,10 @@ namespace TowerDefence
                             currentTowerSelected = TowerSelect.None;
                         }
                     }
-                    
-                    // Debug.WriteLine(towersList.Count);
                     break;
                 default:
                     break;
             }
-
-           
             TowerDamage(gameTime);
 
             foreach (Enemys enemys in enemyList) 
@@ -326,63 +338,60 @@ namespace TowerDefence
                     startParticles -= particlesDuration;
                     startParticleUpdate = false;
                 }
-
             }
-
-            DrawOnRenderTarget(); ///dasdadasad
+            DrawOnRenderTarget(); 
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(backgroundColor);
-
-            // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-           
-            
+            _spriteBatch.Begin();         
             switch (currentGameState)
             {
                 case GameState.StartMenu:
                     myForm1.Show();
                     break;
                 case GameState.Game:
-                    GameDraw(gameTime);
-                    _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
+                    GameDraw(gameTime);             
                     break;
                 case GameState.Pause:
                     GameDraw(gameTime);
                     _spriteBatch.Draw(SpriteManager.PauseWindowTex, new Vector2(SpriteManager.PauseWindowTex.Width/2, SpriteManager.PauseWindowTex.Height), Color.White);
-                    _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
                 case GameState.GameOver:           
                     GraphicsDevice.Clear(backgroundColor);
                     _spriteBatch.Draw(SpriteManager.GameOverTex, Vector2.Zero, Color.White);
-                    _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
                 case GameState.Win:
 
+                    Vector2 playerNamePos = new Vector2(400, 350);
+                    Vector2 moneySpentPos = new Vector2(400, 400);
+                    Vector2 livesLostPos = new Vector2(400, 450);
+                    _spriteBatch.Draw(SpriteManager.WinTex, updatingPos, Color.White);
+                  
+                    _spriteBatch.DrawString(score_Font, "Name: " + myForm1.PlayerName,playerNamePos, Color.White);
+                    _spriteBatch.DrawString(score_Font, "Total Money Spent: " + totalMoneySpent, moneySpentPos, Color.White);
+                    _spriteBatch.DrawString(score_Font, "Total Lives Lost :" + (maxlives - lives),livesLostPos, Color.White);
+                    _spriteBatch.Draw(SpriteManager.HideBlock, new Rectangle((int)updatingPos.X -10 , (int)updatingPos.Y + SpriteManager.WinTex.Height + bars*10, SpriteManager.WinTex.Width + 20, (SpriteManager.WinTex.Height)), backgroundColor);
+                    //Box som täcker score
+                    for (int i = 0; i < bars; i++)
+                    {                
+                        _spriteBatch.Draw(SpriteManager.UpdateBar, new Rectangle((int)updatingPos.X + 57 + (SpriteManager.UpdateBar.Width + 3) * i, (int)updatingPos.Y + 168, SpriteManager.UpdateBar.Width, SpriteManager.UpdateBar.Height), Color.White);    
+                    }
                     break;
                 default:
-                    break;
+                    break;          
             }
-          
+            _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
             _spriteBatch.End();
-
             base.Draw(gameTime);
         }
 
         public void GameDraw(GameTime gameTime)
-        {
-           
+        {          
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-
             _spriteBatch.Draw(renderTarget, Vector2.Zero, Color.White);
             hudManager.Draw(_spriteBatch);
-
-          
-           
-
             foreach (Towers towers in towersList)
             {
                 if (towers.infoClicked)
@@ -400,15 +409,15 @@ namespace TowerDefence
                                 money -= towers.avastLevel1Cost;
                                 towers.level++;
                                 towers.rad = towers.avastLvl2Rad;
-
-                                SpawnParticle();
-                                
+                                totalMoneySpent += towers.avastLevel1Cost;
+                                SpawnParticle();                               
                             } 
                             if(towers.level == 2 && money >= towers.avastLevel2Cost)
                             {
                                 money -= towers.avastLevel2Cost;
                                 towers.level++;
                                 towers.attackDelay = towers.avastLvl3Att;
+                                totalMoneySpent += towers.avastLevel2Cost;
                                 SpawnParticle();
                             }
                             break;
@@ -419,9 +428,7 @@ namespace TowerDefence
                             int sellLevel1 = avastPlaceCost - 29;
                             int sellLevel2 = sellLevel1 + towers.avastLevel1Cost - 37;
                             int sellLevel3 = sellLevel2 + towers.avastLevel2Cost - 112;
-
                             SellPrices(towers, sellLevel1, sellLevel2, sellLevel3);
-
                             towersList.Remove(towers);
                             hudManager.currentInfo = HUDManager.TowerInfo.None;
                             break;
@@ -431,8 +438,6 @@ namespace TowerDefence
                     {
                         Debug.WriteLine("Nord VPN tower");
                         hudManager.currentInfo = HUDManager.TowerInfo.Nord;
-
-
                         if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
                         {
                             if (towers.level == 1 && money >= towers.NordLevel1Cost)
@@ -440,14 +445,15 @@ namespace TowerDefence
                                 money -= towers.NordLevel1Cost;
                                 towers.level++;
                                 towers.attackDelay = towers.nordLvl2Att;
+                                totalMoneySpent += towers.NordLevel1Cost;
                                 SpawnParticle();
-
                             }
                             if (towers.level == 2 && money >= towers.NordLevel2Cost)
                             {
                                 money -= towers.NordLevel2Cost;
                                 towers.level++;
                                 towers.attackDelay = towers.nordLvl3Att;
+                                totalMoneySpent += towers.NordLevel2Cost;
                                 SpawnParticle();
                             }
                             break;
@@ -457,7 +463,6 @@ namespace TowerDefence
                             int sellLevel1 = nordVPNCost - 69;
                             int sellLevel2 = sellLevel1 + towers.NordLevel1Cost - 75;
                             int sellLevel3 = sellLevel2+ towers.NordLevel1Cost - 137;
-
                             SellPrices(towers, sellLevel1, sellLevel2, sellLevel3);
                             towersList.Remove(towers);
                             hudManager.currentInfo = HUDManager.TowerInfo.None;
@@ -479,7 +484,6 @@ namespace TowerDefence
                 case TowerSelect.None:
                     break;
                 case TowerSelect.Avast:
-                    //gameObject.Draw(_spriteBatch);
                     avastSelected.Draw(_spriteBatch);
                     break;
                 case TowerSelect.NordVPN:
@@ -492,16 +496,11 @@ namespace TowerDefence
 
         private void DrawOnRenderTarget()
         {
-
             GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(Color.Transparent);
             _spriteBatch.Begin();
 
-
-            // Spine ritas ut i rendertarget
             SplineManager.simplePath.Draw(_spriteBatch);
-            //SplineManager.simplePath.DrawPoints(_spriteBatch);
-
 
             foreach (Towers twrs in towersList)
             {
@@ -515,13 +514,11 @@ namespace TowerDefence
                     enemys.Draw(_spriteBatch); 
                 }
                 else
-                {
-                   
+                {          
                     enemyList.Remove(enemys);
                     break;
                 }  
-            }
-          
+            }    
             _spriteBatch.End();
             GraphicsDevice.SetRenderTarget(null);  
         }
@@ -537,8 +534,7 @@ namespace TowerDefence
                 if (pixels[i].A > 0.0f && pixels2[i].A > 0.0f) 
                 {
                     return false;
-                }
-                    
+                }          
             }
             return true;
         }
@@ -558,8 +554,6 @@ namespace TowerDefence
                 }
             }
         }
- 
-
         public void TowerDamage(GameTime gameTime)
         {
             foreach (Towers towers in towersList)
@@ -585,34 +579,29 @@ namespace TowerDefence
                     {
                         enemys.NoIce(gameTime);
                     }  
-                }
-                
+                }      
             }
         }
-
         public void SellPrices(Towers towers, int level1, int level2, int level3)
         {
             if (towers.level == 1)
             {
-                money += level1; 
+                money += level1;
             }
             if (towers.level == 2)
             {
-                money += level2;     
+                money += level2;
             }
             if (towers.level == 3)
             {
-                money += level3;   
+                money += level3;
             }
         }
-
         public void SpawnParticle()
         {
             particleSystem.EmitterLocation = new Vector2(hudManager.levelUpButtonRect.X + SpriteManager.LevelUpButtonTex.Width / 2, hudManager.levelUpButtonRect.Y + SpriteManager.LevelUpButtonTex.Height / 4);
             startParticleUpdate = true;
             SpriteManager.CashSound.Play();
-        }
-
-      
+        }   
     }
 }

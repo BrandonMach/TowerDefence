@@ -28,7 +28,6 @@ namespace TowerDefence
         public int nordLvl2Att = 1150;
         public int nordLvl3Att = 450;
 
-
         Projectile projectile;
 
         public Towers(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox)
@@ -45,10 +44,7 @@ namespace TowerDefence
         {
             pos.X = Mouse.GetState().X;
             pos.Y = Mouse.GetState().Y;
-            
-
-            hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height);
-           
+            hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2, texture.Width, texture.Height);   
         }
 
         public void StartAttack(GameTime gameTime, Enemys enemys, Vector2 direction, Texture2D projectileTex)
@@ -63,13 +59,10 @@ namespace TowerDefence
                 // Debug.WriteLine("Enemy Hp: " + enemys.enemyHp);
                 projectile = new Projectile(projectileTex, pos, new Rectangle((int)pos.X, (int)pos.Y, SpriteManager.BallTex.Width, SpriteManager.BallTex.Height), direction, level);
                 Game1.projectileList.Add(projectile);
-
-
                 Debug.WriteLine("Enemy in range");
                 enemys.TakeDamage();  
             }
         }
-
         public override void Draw(SpriteBatch _spriteBatch)
         {
             base.Draw(_spriteBatch); 

@@ -15,8 +15,7 @@ namespace TowerDefence
            
             simplePath = new SimplePath(graphicsDevice);
             simplePath.Clean();
-            
-
+           
             simplePath.AddPoint( Vector2.Zero); // LÄgger till punkt nummer 0 på positionen 0,0
             simplePath.AddPoint( new Vector2(80,200));//1
             simplePath.AddPoint( new Vector2(80, 250));//2
@@ -30,7 +29,6 @@ namespace TowerDefence
             simplePath.AddPoint( new Vector2(65, 520));
             simplePath.AddPoint( new Vector2(70, 550));
             simplePath.AddPoint( new Vector2(700, 650));
-
             simplePath.AddPoint( new Vector2(1600, 700));
             simplePath.AddPoint(new Vector2(1620, 600));
             simplePath.AddPoint( new Vector2(900, 800));
@@ -38,15 +36,8 @@ namespace TowerDefence
             simplePath.AddPoint( new Vector2(100, 900));
             simplePath.AddPoint( new Vector2(240, 960));
             simplePath.AddPoint(new Vector2(700, 900));
-
-
-
             Debug.WriteLine(simplePath.GetPos(simplePath.beginT));
-
-
-
-            simplePath.AddPoint(new Vector2(Window.ClientBounds.Width -10, Window.ClientBounds.Height - 10));
-            
+            simplePath.AddPoint(new Vector2(Window.ClientBounds.Width -10, Window.ClientBounds.Height - 10));        
         }
     }
 }

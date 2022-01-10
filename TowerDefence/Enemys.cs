@@ -29,7 +29,6 @@ namespace TowerDefence
         double slowEffectDuration;
 
         bool frozen;
-
         public Enemys(Texture2D texture, Vector2 position, Rectangle HitBox):base(texture, position, HitBox)
         {
             speed = 3;
@@ -44,7 +43,7 @@ namespace TowerDefence
             if(Game1.waveNum == 5)
             {
                 speed = 6;
-                enemyHp = 5;
+                enemyHp = 10;
             }
             if(Game1.waveNum == 10)
             {
@@ -101,9 +100,7 @@ namespace TowerDefence
                     speed = 3.5f;
                     frozen = true;
                 }
-
             }
-
             wasSlow = true;
         }
 
@@ -117,13 +114,11 @@ namespace TowerDefence
                 frozen = false;
             }
         }
-
         public override void Draw(SpriteBatch _spriteBatch)
         {
             if (frozen)
             {
-                _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.LightBlue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
-                
+                _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.LightBlue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);     
             }
             else
             {
@@ -131,12 +126,7 @@ namespace TowerDefence
                 //_spriteBatch.Draw(texture, hitbox, Color.Red);
             }
             _spriteBatch.Draw(SpriteManager.HPBarTex, hpbackDrop, Color.Black);
-            _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);
-            
+            _spriteBatch.Draw(SpriteManager.HPBarTex, hpRect, Color.White);           
         }
-
-       
-
-
     }
 }

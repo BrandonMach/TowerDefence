@@ -18,18 +18,13 @@ namespace TowerDefence
             this.pos = position;
             this.hitbox = HitBox;
         }
-
         public virtual void Update()
-        {
-         
+        {     
             hitbox = new Rectangle((int)pos.X - texture.Width / 2, (int)pos.Y - texture.Height / 2,texture.Width , texture.Height);
-
         }
-
         public virtual void Draw(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(texture, pos , null ,Color.White,0f,new Vector2(texture.Width/2,texture.Height/2),1f,SpriteEffects.None,1f);
-            //_spriteBatch.Draw(texture, hitbox, Color.Red);
         }
     }
 }

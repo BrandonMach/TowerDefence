@@ -31,15 +31,15 @@ namespace TowerDefence
             public static Texture2D Cursor { get; private set; }
             public static Texture2D Heart { get; private set; }
             public static Texture2D GameOverTex { get; private set; }
+            public static Texture2D WinTex { get; private set; }
+            public static Texture2D UpdateBar { get; private set; } 
+            public static Texture2D HideBlock { get; private set; } 
             public static Song StartUpTheme { get; private set; }
             public static Song MainTheme { get; private set; }
             public static SoundEffect PlacingSound { get; private set; }
             public static SoundEffect CashSound { get; private set; }
-
-
-
-
-
+            public static SoundEffect DialUpSound { get; private set; }
+            public static SoundEffect ErrorSound { get; private set; }
         public static void LoadSprites(ContentManager Content)
             {
                 BloonsMonkeyTex = Content.Load<Texture2D>("bloonsMonkey");
@@ -61,18 +61,18 @@ namespace TowerDefence
                 Cursor = Content.Load<Texture2D>("fingerCursor");
                 Heart = Content.Load<Texture2D>("marioHeart");
                 GameOverTex = Content.Load<Texture2D>("GameOverTD");
+                WinTex = Content.Load<Texture2D>("Updating");
+                UpdateBar = Content.Load<Texture2D>("UpdateBar");
+                HideBlock = Content.Load<Texture2D>("WhiteBlock");
                 StartUpTheme = Content.Load<Song>("Microsoft Windows 95");
                 MainTheme = Content.Load<Song>("Microsoft Windows 95 Passport");
                 PlacingSound = Content.Load<SoundEffect>("PlacingSound");
                 CashSound = Content.Load<SoundEffect>("Cash Register");
+                DialUpSound = Content.Load<SoundEffect>("Dial Up");
+                ErrorSound = Content.Load<SoundEffect>("Windows 95 - Error Sound");
 
                 MediaPlayer.Volume = 0.1f;
                 MediaPlayer.Play(StartUpTheme);
-
-
-        }
-        
+        }     
     }
-
-
 }

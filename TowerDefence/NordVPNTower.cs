@@ -9,9 +9,7 @@ namespace TowerDefence
 {
     class NordVPNTower : Towers
     {
-
-        Rectangle slowRange;
-        
+        Rectangle slowRange;   
         public NordVPNTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad, attackTimer, attackDelay)
         {
             this.rad = rad;     
@@ -19,7 +17,6 @@ namespace TowerDefence
         public override void Update()
         {
             base.Update();
-
         }
         public void SlowEnemy()
         {
@@ -29,9 +26,7 @@ namespace TowerDefence
         {
 
             base.Draw(_spriteBatch);
-            _spriteBatch.Draw(SpriteManager.BallTex, slowRange, Color.Blue);
-           
+            _spriteBatch.Draw(SpriteManager.BallTex, slowRange, Color.Blue);      
         }
-
     }
 }
