@@ -35,6 +35,7 @@ namespace WinForm
             // 
             // textBoxName
             // 
+            this.textBoxName.Cursor = System.Windows.Forms.Cursors.Hand;
             this.textBoxName.Font = new System.Drawing.Font("Segoe UI", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.textBoxName.Location = new System.Drawing.Point(423, 175);
             this.textBoxName.Name = "textBoxName";
@@ -62,6 +63,7 @@ namespace WinForm
             this.ClientSize = new System.Drawing.Size(1152, 348);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxName);
+            this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Location = new System.Drawing.Point(100, 30);
             this.Name = "NameMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

@@ -54,6 +54,8 @@ namespace TowerDefence
         public static int waveNum = 0;
         WaveManager wavemanager;
 
+        Vector2 mousePosCursor;
+
         public static bool spawnWaves;
 
         Enemys enemys;
@@ -76,7 +78,7 @@ namespace TowerDefence
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
         }
 
         protected override void Initialize()
@@ -139,7 +141,7 @@ namespace TowerDefence
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
-         
+            mousePosCursor = new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y);
             switch (currentGameState)
             { 
                 case GameState.StartMenu:
@@ -194,10 +196,10 @@ namespace TowerDefence
             hudManager.Update();
 
             //particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-            
-           
 
-            if (KeyMouseReader.KeyPressed(Keys.Space))
+
+
+            if (KeyMouseReader.KeyPressed(Keys.Space) && enemyList.Count == 0)
             {
                 spawnWaves = true;
                 waveNum++;
@@ -208,13 +210,6 @@ namespace TowerDefence
             {
                 wavemanager.Update(gameTime);               
             }
-            //if (KeyMouseReader.KeyPressed(Keys.S)) //Speed up enemys
-            //{
-            //    foreach (Enemys enemys in enemyList)
-            //    {
-            //        enemys.speed += 3;
-            //    }
-            //}
             foreach (Enemys enemys in enemyList)
             {
                 enemys.Update();
@@ -326,7 +321,7 @@ namespace TowerDefence
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
+           
             
             switch (currentGameState)
             {
@@ -335,17 +330,20 @@ namespace TowerDefence
                     break;
                 case GameState.Game:
                     GameDraw(gameTime);
+                    _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
                 case GameState.Pause:
                     GameDraw(gameTime);
                     _spriteBatch.Draw(SpriteManager.PauseWindowTex, new Vector2(SpriteManager.PauseWindowTex.Width/2, SpriteManager.PauseWindowTex.Height), Color.White);
+                    _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
                 case GameState.End:
+                    _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
                 default:
                     break;
             }
-
+          
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -381,9 +379,6 @@ namespace TowerDefence
                                 towers.attackDelay = 250;
 
                                 SpawnParticle();
-
-                               
-                               
                                 
                             } 
                             if(towers.level == 2 && money >= towers.avastLevel2Cost)
@@ -550,34 +545,22 @@ namespace TowerDefence
                     if (Vector2.Distance(towers.pos, enemys.positionV2) < (towers.rad))
                     {
                         Debug.WriteLine(enemys.positionV2);
-                        //towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos));
-
-                        //startParticleUpdate = true;
 
                         if (towers is AvastTower)
                         {
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.AvastProjectile);
-                            //particleSystem.EmitterLocation = enemys.positionV2;
-
                         }
                        
                         if (towers is NordVPNTower)
                         {
                             enemys.SlowSpeed(gameTime);
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.SnowFlakeTex);
-                            //particleSystem.EmitterLocation = enemys.positionV2;
-                        }
-                       
+                        }                   
                     }
                     else if (enemys.wasSlow)
                     {
                         enemys.NoIce(gameTime);
-                    }
-                    
-                    
-                        
-                    
-
+                    }  
                 }
                 
             }
@@ -604,5 +587,7 @@ namespace TowerDefence
             particleSystem.EmitterLocation = new Vector2(hudManager.levelUpButtonRect.X + SpriteManager.LevelUpButtonTex.Width / 2, hudManager.levelUpButtonRect.Y + SpriteManager.LevelUpButtonTex.Height / 4);
             startParticleUpdate = true;
         }
+
+      
     }
 }
