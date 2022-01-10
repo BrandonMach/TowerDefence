@@ -103,7 +103,6 @@ namespace TowerDefence
 
             hudManager = new HUDManager(Content);
 
-            // TODO: use this.Content to load your game content here
             SpriteManager.LoadSprites(Content);
             _graphics.PreferredBackBufferWidth = SpriteManager.BackgroundTex.Width + hudWith;
             _graphics.PreferredBackBufferHeight = SpriteManager.BackgroundTex.Height;
