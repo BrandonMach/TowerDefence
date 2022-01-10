@@ -85,18 +85,25 @@ namespace TowerDefence
         }
         public void SlowSpeed(GameTime gameTime)
         {
+            if(Game1.waveNum == 5)
+            {
+                speed = 6;
+            }
+            else
+            {
+                if (Game1.waveNum <= 10)
+                {
+                    speed = 1.5f;
+                    frozen = true;
+                }
+                if (Game1.waveNum >= 10)
+                {
+                    speed = 3.5f;
+                    frozen = true;
+                }
 
-            if (Game1.waveNum <= 10)
-            {
-                speed = 1.5f;
-                frozen = true;
             }
-            if (Game1.waveNum >= 10)
-            {
-                speed = 3.5f;
-                frozen = true;
-            }
-            
+
             wasSlow = true;
         }
 
@@ -113,11 +120,6 @@ namespace TowerDefence
 
         public override void Draw(SpriteBatch _spriteBatch)
         {
-            if(Game1.waveNum == 5)
-            {
-                _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.Yellow, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
-
-            }
             if (frozen)
             {
                 _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.LightBlue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
