@@ -18,7 +18,8 @@ namespace TowerDefence
             StartMenu,
             Game,
             Pause,
-            End,
+            GameOver,
+            Win,
         }
         GameState currentGameState;
         public enum TowerSelect
@@ -180,8 +181,10 @@ namespace TowerDefence
                         isPaused = false;
                     }
                     break;
-                case GameState.End:
+                case GameState.GameOver:
                     KeyMouseReader.Update();
+                    break;
+                case GameState.Win:
                     break;
                 default:
                     break;
@@ -204,14 +207,20 @@ namespace TowerDefence
             hudManager.Update();
             if (KeyMouseReader.KeyPressed(Keys.D9) )
             {
-                currentGameState = GameState.End;
+                currentGameState = GameState.GameOver;
             }
             if (KeyMouseReader.KeyPressed(Keys.Space) && enemyList.Count == 0)
             {
                 spawnWaves = true;
                 waveNum++;
-                wavemanager.startSpawnDuration = 0;
+               
                 money += 150;
+                wavemanager.startSpawnDuration = 0;
+            }
+            if (waveNum == 10 && enemyList.Count == 0 && !spawnWaves)
+            {
+                Debug.WriteLine("gameOver");
+                currentGameState = GameState.Win;
             }
             if (spawnWaves)
             {
@@ -231,6 +240,7 @@ namespace TowerDefence
                 projectile.Update();
 
             }
+            
 
             switch (currentTowerSelected)
             {
@@ -245,7 +255,7 @@ namespace TowerDefence
                         if (CanPlace(avastSelected))
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
-                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150,0, 300));
+                            towersList.Add(new AvastTower(SpriteManager.AvastTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.AvastTex.Width / 2, (int)newPosition.Y - SpriteManager.AvastTex.Height / 2, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height),150,0, 400));
                             Debug.WriteLine("placed");
                             currentTowerSelected = TowerSelect.None;
                             money -= avastPlaceCost;
@@ -268,8 +278,7 @@ namespace TowerDefence
                         {
                             Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
 
-                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),300,0,1500));
-                            
+                            towersList.Add(new NordVPNTower(SpriteManager.NordVPNTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.NordVPNTex.Width / 2, (int)newPosition.Y - SpriteManager.NordVPNTex.Height / 2, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height),300,0,1500));   
                             Debug.WriteLine("placed");
                             Debug.WriteLine("Mouse pos" +KeyMouseReader.mouseState.X + KeyMouseReader.mouseState.Y);
                             Debug.WriteLine("tower" + newPosition);
@@ -344,10 +353,13 @@ namespace TowerDefence
                     _spriteBatch.Draw(SpriteManager.PauseWindowTex, new Vector2(SpriteManager.PauseWindowTex.Width/2, SpriteManager.PauseWindowTex.Height), Color.White);
                     _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
                     break;
-                case GameState.End:           
+                case GameState.GameOver:           
                     GraphicsDevice.Clear(backgroundColor);
                     _spriteBatch.Draw(SpriteManager.GameOverTex, Vector2.Zero, Color.White);
                     _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
+                    break;
+                case GameState.Win:
+
                     break;
                 default:
                     break;
@@ -385,7 +397,7 @@ namespace TowerDefence
                             {
                                 money -= towers.avastLevel1Cost;
                                 towers.level++;
-                                towers.attackDelay = 250;
+                                towers.rad = 180;
 
                                 SpawnParticle();
                                 
@@ -394,7 +406,7 @@ namespace TowerDefence
                             {
                                 money -= towers.avastLevel2Cost;
                                 towers.level++;
-                                towers.attackDelay = 200;
+                                towers.attackDelay = 350;
                                 SpawnParticle();
                             }
                             break;
@@ -425,7 +437,7 @@ namespace TowerDefence
                             {
                                 money -= towers.NordLevel1Cost;
                                 towers.level++;
-                                towers.attackDelay = 1250;
+                                towers.attackDelay = 1150;
                                 SpawnParticle();
 
                             }
@@ -433,7 +445,7 @@ namespace TowerDefence
                             {
                                 money -= towers.NordLevel2Cost;
                                 towers.level++;
-                                towers.attackDelay = 850;
+                                towers.attackDelay = 450;
                                 SpawnParticle();
                             }
                             break;

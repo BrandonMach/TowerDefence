@@ -28,8 +28,6 @@ namespace TowerDefence
         double startSlowTimer;
         double slowEffectDuration;
 
-        
-
         bool frozen;
 
         public Enemys(Texture2D texture, Vector2 position, Rectangle HitBox):base(texture, position, HitBox)
@@ -39,11 +37,16 @@ namespace TowerDefence
             enemyHp = 20;
             alive = true;
 
-            if (Game1.waveNum >= 5)
+            if (Game1.waveNum >= 4 || Game1.waveNum < 10 && Game1.waveNum !=5)
             {
                 enemyHp = 25;
             }
-            if(Game1.waveNum >= 10)
+            if(Game1.waveNum == 5)
+            {
+                speed = 6;
+                enemyHp = 5;
+            }
+            if(Game1.waveNum == 10)
             {
                 enemyHp = 50;
                 speed = 5;
@@ -110,8 +113,12 @@ namespace TowerDefence
 
         public override void Draw(SpriteBatch _spriteBatch)
         {
+            if(Game1.waveNum == 5)
+            {
+                _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.Yellow, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
 
-            if(frozen)
+            }
+            if (frozen)
             {
                 _spriteBatch.Draw(SpriteManager.TrojanIceTex, SplineManager.simplePath.GetPos(positionFloat), null, Color.LightBlue, rotation, new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 1f);
                 
