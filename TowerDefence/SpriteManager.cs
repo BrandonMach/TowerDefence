@@ -12,7 +12,8 @@ namespace TowerDefence
 {
     class SpriteManager
     {
-            public static Texture2D BloonsMonkeyTex { get; private set; }
+          
+            public static Texture2D CustomTowerTex { get; private set; }
             public static Texture2D BackgroundTex { get; private set; }
             public static Texture2D TrojanTex { get; private set; }
             public static Texture2D TrojanIceTex { get; private set; }
@@ -42,7 +43,8 @@ namespace TowerDefence
             public static SoundEffect ErrorSound { get; private set; }
         public static void LoadSprites(ContentManager Content)
             {
-                BloonsMonkeyTex = Content.Load<Texture2D>("bloonsMonkey");
+                
+                CustomTowerTex = Content.Load<Texture2D>("w98 logo");
                 BackgroundTex = Content.Load<Texture2D>("wd95");
                 TrojanTex = Content.Load<Texture2D>("trojanHorse");
                 TrojanIceTex = Content.Load<Texture2D>("trojanHorseIce");

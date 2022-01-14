@@ -12,6 +12,8 @@ namespace TowerDefence
     {
         private Rectangle avastIcon;
         private Rectangle nordVPNIcon;
+        private Rectangle customIcon;
+
         private Vector2 moneyPos;
         private Vector2 avastTextPos;
         private Vector2 nordVPNTextPos;
@@ -33,6 +35,7 @@ namespace TowerDefence
         {
             Avast,
             Nord, 
+            Custom,
             None,
         }
         public  TowerInfo currentInfo = TowerInfo.None;
@@ -43,6 +46,7 @@ namespace TowerDefence
             avastTextPos = new Vector2(1810, 270);
             nordVPNIcon = new Rectangle(1750, 290, 100,100);
             nordVPNTextPos = new Vector2(1810, 430);
+            customIcon = new Rectangle(1750, 440, 100, 100);
             moneyPos = new Vector2(1750, 10);
             money_Font = Content.Load<SpriteFont>("money_Font");
             waveTextPos = new Vector2(1450, 10);
@@ -67,6 +71,10 @@ namespace TowerDefence
             else if (nordVPNIcon.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && Game1.money >= Game1.nordVPNCost)
             {
                 Game1.currentTowerSelected = Game1.TowerSelect.NordVPN;
+            } 
+            else if (customIcon.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && Game1.money >= Game1.customTowerCost)
+            {
+                Game1.currentTowerSelected = Game1.TowerSelect.CustomTower;
             }
         }
 
@@ -111,9 +119,24 @@ namespace TowerDefence
                         }
                     }
                     break;
+                case TowerInfo.Custom:
+                    foreach (Towers tower in Game1.towersList)
+                    {
+                        string nordLevel1Text = "$" + tower.NordLevel1Cost;
+                        string nordLevel2Text = "$" + tower.NordLevel2Cost;
+                        Vector2 nordInfoTextPos = new Vector2(1896, 140);
+                        if (tower is NordVPNTower && tower.infoClicked)
+                        {
+                            _spriteBatch.DrawString(money_Font, nordTowerText + "\n Tower Level: " + tower.level, nordInfoTextPos, Color.White, 0f, money_Font.MeasureString(nordTowerText), 0.65f, SpriteEffects.None, 1f);
+                            LevelManager(tower, _spriteBatch, nordLevel1Text, nordLevel2Text, tower.NordLevel1Cost, tower.NordLevel2Cost);
+                            _spriteBatch.Draw(SpriteManager.SellButtonTex, sellButtonRect, Color.White);
+                        }
+                    }
+                    break;
                 case TowerInfo.None:
                     _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.White);
                     _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.White);
+                    _spriteBatch.Draw(SpriteManager.CustomTowerTex, customIcon, Color.White);
                     if (Game1.money <= Game1.avastPlaceCost)
                     {
                         _spriteBatch.Draw(SpriteManager.AvastTex, avastIcon, Color.Red);
@@ -122,8 +145,13 @@ namespace TowerDefence
                     {
                         _spriteBatch.Draw(SpriteManager.NordVPNTex, nordVPNIcon, Color.Red);
                     }
+                    if (Game1.money <= Game1.customTowerCost)
+                    {
+                        _spriteBatch.Draw(SpriteManager.CustomTowerTex, customIcon, Color.Red);
+                    }
                     _spriteBatch.DrawString(money_Font, "$" + Game1.avastPlaceCost, avastTextPos, Color.Gold, 0f, money_Font.MeasureString(avastText), 0.7f, SpriteEffects.None, 1f);
                     _spriteBatch.DrawString(money_Font, "$" + Game1.nordVPNCost, nordVPNTextPos, Color.Gold, 0f, money_Font.MeasureString(nordVpnText), 0.7f, SpriteEffects.None, 1f);
+                    _spriteBatch.DrawString(money_Font, "$" + Game1.customTowerCost, nordVPNTextPos +new Vector2(0,100), Color.Gold, 0f, money_Font.MeasureString(nordVpnText), 0.7f, SpriteEffects.None, 1f);
                     break;
             }
         }

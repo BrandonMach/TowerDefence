@@ -17,6 +17,7 @@ namespace TowerDefence
         {
             StartMenu,
             Game,
+            MainMenu,
             Pause,
             GameOver,
             Win,
@@ -27,7 +28,7 @@ namespace TowerDefence
             None,
             Avast,
             NordVPN,
-            Monkey, 
+            CustomTower, 
         }
         public static TowerSelect currentTowerSelected;
 
@@ -42,10 +43,17 @@ namespace TowerDefence
       
         Towers avastSelected;
         Towers nordVPNSelected;
+        Towers customSelected;
         public static List<GameObject> towersList;
         List<NordVPNTower> nordList;
 
         public static List<GameObject> projectileList;
+
+        //CustomTowerCreator
+        int customRad;
+        int customAttackSpd;
+        public static int customTowerCost;
+
 
         //HUD
         HUDManager hudManager;
@@ -121,9 +129,12 @@ namespace TowerDefence
             currentTowerSelected = TowerSelect.None;
             myForm1 = new NameMenu();
 
-            SplineManager.LoadSpline(GraphicsDevice, Window);
+            SplineManager.LoadSpline(GraphicsDevice, Window/*, true*/);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 150, 0,2);
             nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 250, 0,5);
+            customAttackSpd = 275;
+            customRad = 100;
+
 
             startingMoney = 350;
             money = 0;
@@ -164,15 +175,47 @@ namespace TowerDefence
                     if (myForm1.PlayerName != "")
                     {
                         Window.Title = "Player: " + myForm1.PlayerName;
-                        currentGameState = GameState.Game;
+                        currentGameState = GameState.MainMenu;
                         isPaused = false;
                         money = startingMoney;
                         MediaPlayer.Play(SpriteManager.MainTheme);
+                        MediaPlayer.IsRepeating = true;
                     }       
                     break;
+                case GameState.MainMenu:
+                    KeyMouseReader.Update();
+
+                    //SplineManager.LoadSpline(GraphicsDevice, Window, false);
+
+                 
+
+                    if (KeyMouseReader.KeyPressed(Keys.Up))
+                    {
+                        customRad += 25;
+                        customTowerCost += 20;
+                    }
+                    if (KeyMouseReader.KeyPressed(Keys.Down))
+                    {
+                        customRad -= 25;
+                        customTowerCost -= 20;
+                    }
+                    if (KeyMouseReader.KeyPressed(Keys.Enter))
+                    {      
+                        customSelected = new CustomTower(SpriteManager.CustomTowerTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.CustomTowerTex.Width, SpriteManager.CustomTowerTex.Height), customRad, 0,customAttackSpd);
+                        currentGameState = GameState.Game;
+                    }
+
+                    if (KeyMouseReader.KeyPressed(Keys.E))
+                    {                    
+                        
+                    }
+                    //DrawOnRenderTarget();
+                    break;
                 case GameState.Game:
-                    
-                    if(!isPaused)
+                    //SplineManager.LoadSpline(GraphicsDevice, Window, true);
+
+                    //DrawOnRenderTarget();
+                    if (!isPaused)
                     {
                         GameUpdate(gameTime);
                     }                  
@@ -203,8 +246,7 @@ namespace TowerDefence
                     startUpdating += gameTime.ElapsedGameTime.TotalSeconds;
 
                     if (startUpdating < updatingFinished && bars < 26)
-                    {
-                       
+                    {                    
                         if (startUpdateOneBar >= updatingDuration)
                         {
                             startUpdateOneBar -= updatingDuration;
@@ -220,6 +262,7 @@ namespace TowerDefence
         }
         public void GameUpdate(GameTime gameTime)
         {
+         
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
                 Exit();
           
@@ -308,6 +351,25 @@ namespace TowerDefence
                         }
                     }
                     break;
+                case TowerSelect.CustomTower:
+                    customSelected.Update();
+                    if (KeyMouseReader.LeftClick() && Mouse.GetState().X > 0 + customSelected.texture.Width / 2 && Mouse.GetState().Y > 0 + customSelected.texture.Height / 2 && Mouse.GetState().X < Window.ClientBounds.Width - customSelected.texture.Width / 2 - hudWith && money >= customTowerCost)
+                    {
+                        if (CanPlace(customSelected))
+                        {
+                            totalMoneySpent += customTowerCost;
+                            Vector2 newPosition = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+                            towersList.Add(new CustomTower(SpriteManager.CustomTowerTex, newPosition, new Rectangle((int)newPosition.X - SpriteManager.CustomTowerTex.Width / 2, (int)newPosition.Y - SpriteManager.CustomTowerTex.Height / 2, SpriteManager.CustomTowerTex.Width, SpriteManager.CustomTowerTex.Height), customRad, 0, customAttackSpd));
+                            currentTowerSelected = TowerSelect.None;
+                            money -= customTowerCost;
+                            SpriteManager.PlacingSound.Play();
+                        }
+                        else
+                        {
+                            currentTowerSelected = TowerSelect.None;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -352,6 +414,9 @@ namespace TowerDefence
                 case GameState.Game:
                     GameDraw(gameTime);             
                     break;
+                case GameState.MainMenu:
+                    MainMenuDraw(gameTime);      
+                    break;
                 case GameState.Pause:
                     GameDraw(gameTime);
                     _spriteBatch.Draw(SpriteManager.PauseWindowTex, new Vector2(SpriteManager.PauseWindowTex.Width/2, SpriteManager.PauseWindowTex.Height), Color.White);
@@ -384,7 +449,10 @@ namespace TowerDefence
             _spriteBatch.End();
             base.Draw(gameTime);
         }
-
+        public void MainMenuDraw(GameTime gameTime)
+        {
+           
+        }
         public void GameDraw(GameTime gameTime)
         {          
             _spriteBatch.Draw(SpriteManager.BackgroundTex, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
@@ -466,7 +534,44 @@ namespace TowerDefence
                             hudManager.currentInfo = HUDManager.TowerInfo.None;
                             break;
                         }
+
                     }
+
+                    if (towers is CustomTower && towers.infoClicked)
+                    {
+                        Debug.WriteLine("Nord VPN tower");
+                        hudManager.currentInfo = HUDManager.TowerInfo.Nord;
+                        if (hudManager.levelUpButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick() && towers.level < towers.maxLevel)
+                        {
+                            if (towers.level == 1 && money >= towers.NordLevel1Cost)
+                            {
+                                money -= towers.NordLevel1Cost;
+                                towers.level++;
+                                towers.attackDelay = towers.nordLvl2Att;
+                                totalMoneySpent += towers.NordLevel1Cost;
+                                SpawnParticle();
+                            }
+                            if (towers.level == 2 && money >= towers.NordLevel2Cost)
+                            {
+                                money -= towers.NordLevel2Cost;
+                                towers.level++;
+                                towers.attackDelay = towers.nordLvl3Att;
+                                totalMoneySpent += towers.NordLevel2Cost;
+                                SpawnParticle();
+                            }
+                            break;
+                        }
+                        if (hudManager.sellButtonRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                        {
+                            int sellLevel1 = nordVPNCost - 69;
+                            int sellLevel2 = sellLevel1 + towers.NordLevel1Cost - 75;
+                            int sellLevel3 = sellLevel2 + towers.NordLevel1Cost - 137;
+                            SellPrices(towers, sellLevel1, sellLevel2, sellLevel3);
+                            towersList.Remove(towers);
+                            hudManager.currentInfo = HUDManager.TowerInfo.None;
+                            break;
+                        }
+                    } 
                 }
             }
             foreach (Projectile projectile in projectileList)
@@ -486,6 +591,9 @@ namespace TowerDefence
                     break;
                 case TowerSelect.NordVPN:
                     nordVPNSelected.Draw(_spriteBatch);
+                    break; 
+                case TowerSelect.CustomTower:
+                    customSelected.Draw(_spriteBatch);
                     break;
                 default:
                     break;
@@ -499,6 +607,7 @@ namespace TowerDefence
             _spriteBatch.Begin();
 
             SplineManager.simplePath.Draw(_spriteBatch);
+            SplineManager.simplePath.DrawPoints(_spriteBatch);
 
             foreach (Towers twrs in towersList)
             {
@@ -571,7 +680,12 @@ namespace TowerDefence
                         {
                             enemys.SlowSpeed(gameTime);
                             towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.SnowFlakeTex);
-                        }                   
+                        }
+                        if (towers is CustomTower)
+                        {
+                            towers.StartAttack(gameTime, enemys, Vector2.Subtract(enemys.positionV2, towers.pos), SpriteManager.AvastProjectile);
+                        }
+
                     }
                     else if (enemys.wasSlow)
                     {
