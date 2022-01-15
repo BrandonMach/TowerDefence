@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Spline;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace TowerDefence
@@ -14,12 +15,12 @@ namespace TowerDefence
             Classic,
             Edit,
         }
-
-        static GameMode gameModeChoosen;
+        public static List<Vector2> pointList;
 
         public static void LoadSpline(GraphicsDevice graphicsDevice, GameWindow Window/*, bool classicGameMode*/)
         {
-           
+            pointList = new List<Vector2>();
+
             simplePath = new SimplePath(graphicsDevice);
             simplePath.Clean();
             simplePath.AddPoint(Vector2.Zero); // LÄgger till punkt nummer 0 på positionen 0,0
@@ -43,34 +44,12 @@ namespace TowerDefence
             simplePath.AddPoint(new Vector2(240, 960));
             simplePath.AddPoint(new Vector2(700, 900));
             simplePath.AddPoint(new Vector2(Window.ClientBounds.Width - 10, Window.ClientBounds.Height - 10));
-
-            //if (classicGameMode)
-            //{
-            //    gameModeChoosen = GameMode.Classic;
-            //}
-            //else
-            //{
-            //    gameModeChoosen = GameMode.Edit;
-            //}
-
-            //switch (gameModeChoosen)
-            //{                
-            //    case GameMode.Classic:
-
-            //        break;
-            //    case GameMode.Edit:
-            //        simplePath.Clean();
-            //        simplePath.AddPoint(Vector2.Zero);
-            //        simplePath.AddPoint(new Vector2(500,500));
-            //        simplePath.AddPoint(new Vector2(Window.ClientBounds.Width - 10, Window.ClientBounds.Height - 10));
-            //        break;
-            //    default:
-            //        break;
-            //}
-
-
-            Debug.WriteLine(simplePath.GetPos(simplePath.beginT));
-                 
+     
+            for (int i = 0; i < 21; i++)
+            {
+                pointList.Add(simplePath.GetPos(i));
+            }
+            Debug.WriteLine(simplePath.GetPos(simplePath.beginT));        
         }
     }
 }

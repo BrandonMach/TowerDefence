@@ -26,6 +26,10 @@ namespace TowerDefence
             public static Texture2D NordVPNTex { get; private set; }
             public static Texture2D LevelUpButtonTex { get; private set; }
             public static Texture2D SellButtonTex { get; private set; }
+            public static Texture2D RangePlusTex { get; private set; }
+            public static Texture2D RangeMinusTex { get; private set; }
+            public static Texture2D AttackSpdPlusTex { get; private set; }
+            public static Texture2D AttackSpdMinusTex { get; private set; }
             public static Texture2D SnowFlakeTex { get; private set; }
             public static Texture2D AvastProjectile { get; private set; }
             public static Texture2D DollarSignParticle { get; private set; }
@@ -59,6 +63,10 @@ namespace TowerDefence
                 SnowFlakeTex = Content.Load <Texture2D>("snowflake");
                 AvastProjectile = Content.Load <Texture2D>("avastProjectile");
                 SellButtonTex = Content.Load <Texture2D>("sellButtton");
+                RangePlusTex = Content.Load <Texture2D>("RangePlus");
+                RangeMinusTex = Content.Load <Texture2D>("RangeMinus");
+                AttackSpdPlusTex = Content.Load <Texture2D>("attckSpeedPlus");
+                AttackSpdMinusTex = Content.Load <Texture2D>("attckSpeedMinus");
                 DollarSignParticle = Content.Load<Texture2D>("DollarSign");
                 Cursor = Content.Load<Texture2D>("fingerCursor");
                 Heart = Content.Load<Texture2D>("marioHeart");

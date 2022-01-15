@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace TowerDefence
 {
-    class CustomTower : Towers
+    public class CustomTower : Towers
     {
         public CustomTower(Texture2D texture, Vector2 position, Rectangle HitBox, int rad, double attackTimer, double attackDelay) : base(texture, position, HitBox, rad, attackTimer, attackDelay)
         {

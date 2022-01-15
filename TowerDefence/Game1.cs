@@ -18,6 +18,8 @@ namespace TowerDefence
             StartMenu,
             Game,
             MainMenu,
+            MapCreate,
+            TowerCreate,
             Pause,
             GameOver,
             Win,
@@ -53,7 +55,15 @@ namespace TowerDefence
         int customRad;
         int customAttackSpd;
         public static int customTowerCost;
+        int customRadIncrease;
 
+        int pointToMoveIndex;
+        bool movingPoint;
+        Rectangle rangePlusRect;
+        private Rectangle rangeMinusRect;
+        private Rectangle attackSpdPlus;
+        private Rectangle attackSpdMinus;
+        Color settingsColor;
 
         //HUD
         HUDManager hudManager;
@@ -107,6 +117,7 @@ namespace TowerDefence
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             backgroundColor = new Color(0, 128, 128);
+            settingsColor = new Color(192, 192, 192);
 
             hudManager = new HUDManager(Content);
 
@@ -132,8 +143,10 @@ namespace TowerDefence
             SplineManager.LoadSpline(GraphicsDevice, Window/*, true*/);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 150, 0,2);
             nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 250, 0,5);
+            customSelected=  new CustomTower(SpriteManager.CustomTowerTex, new Vector2(400,400), new Rectangle(0,0, SpriteManager.CustomTowerTex.Width, SpriteManager.CustomTowerTex.Height), customRad, 0, customAttackSpd);
             customAttackSpd = 275;
             customRad = 100;
+            customRadIncrease = 0;
 
 
             startingMoney = 350;
@@ -166,8 +179,7 @@ namespace TowerDefence
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
-                Exit();
+           
             
             switch (currentGameState)
             { 
@@ -180,41 +192,119 @@ namespace TowerDefence
                         money = startingMoney;
                         MediaPlayer.Play(SpriteManager.MainTheme);
                         MediaPlayer.IsRepeating = true;
-                    }       
+                    }
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
+                        Exit();
                     break;
                 case GameState.MainMenu:
                     KeyMouseReader.Update();
-
-                    //SplineManager.LoadSpline(GraphicsDevice, Window, false);
-
-                 
-
-                    if (KeyMouseReader.KeyPressed(Keys.Up))
+                    if (KeyMouseReader.KeyPressed(Keys.P))
                     {
-                        customRad += 25;
-                        customTowerCost += 20;
+                        currentGameState = GameState.MapCreate;
                     }
-                    if (KeyMouseReader.KeyPressed(Keys.Down))
+                    if (KeyMouseReader.KeyPressed(Keys.O))
                     {
-                        customRad -= 25;
-                        customTowerCost -= 20;
+                        currentGameState = GameState.TowerCreate;
+                    }
+
+                    break;
+                case GameState.MapCreate:
+                    KeyMouseReader.Update();
+                    if (KeyMouseReader.mouseState.LeftButton != ButtonState.Pressed)
+                    {
+                        movingPoint = false;
+                    }
+                    if (KeyMouseReader.mouseState.LeftButton == ButtonState.Pressed && KeyMouseReader.mouseState.X < Window.ClientBounds.Width - hudWith)
+                    {
+                        if (!movingPoint)
+                        {
+                            int i = 0;
+                            foreach (var point in SplineManager.pointList)
+                            {
+                                Rectangle pointHitbox = new Rectangle((int)point.X - 10, (int)point.Y - 10, 20, 20);
+                                if (pointHitbox.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y))
+                                {
+                                    pointToMoveIndex = i;
+                                    movingPoint = true;
+                                }
+                                i++;
+                            }
+                        }
+                        if (movingPoint == true)
+                        {
+                            SplineManager.simplePath.SetPos(pointToMoveIndex, new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y));
+                        }
                     }
                     if (KeyMouseReader.KeyPressed(Keys.Enter))
-                    {      
-                        customSelected = new CustomTower(SpriteManager.CustomTowerTex, Vector2.Zero, new Rectangle(0, 0, SpriteManager.CustomTowerTex.Width, SpriteManager.CustomTowerTex.Height), customRad, 0,customAttackSpd);
+                    {                        
                         currentGameState = GameState.Game;
                     }
-
-                    if (KeyMouseReader.KeyPressed(Keys.E))
-                    {                    
+                    if (KeyMouseReader.KeyPressed(Keys.Back))
+                    {
+                        currentGameState = GameState.MainMenu;
+                    }
+                    break;
+                case GameState.TowerCreate:
+                    KeyMouseReader.Update();
+                    rangePlusRect = new Rectangle(620, 670, SpriteManager.RangePlusTex.Width, SpriteManager.RangePlusTex.Height);
+                    rangeMinusRect = new Rectangle(620, 670 + SpriteManager.RangeMinusTex.Height + 10, SpriteManager.RangeMinusTex.Width, SpriteManager.RangeMinusTex.Height);
+                    attackSpdPlus = new Rectangle(620 + SpriteManager.RangePlusTex.Width + 10, 670, SpriteManager.AttackSpdPlusTex.Width, SpriteManager.AttackSpdPlusTex.Height);
+                    attackSpdMinus = new Rectangle(620 + SpriteManager.RangePlusTex.Width + 10, 670 + SpriteManager.AttackSpdMinusTex.Height + 10, SpriteManager.AttackSpdMinusTex.Width, SpriteManager.AttackSpdMinusTex.Height);
+                    if ( rangePlusRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && customRadIncrease <=6 && KeyMouseReader.LeftClick())
+                    {
+                        customRad += 25;
+                        customTowerCost += 75;
+                        customRadIncrease += 1;
                         
                     }
-                    //DrawOnRenderTarget();
-                    break;
-                case GameState.Game:
-                    //SplineManager.LoadSpline(GraphicsDevice, Window, true);
+                    if (rangeMinusRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                    {
+                        if (customRad <= 100)
+                        {
+                            customRad = 100;
+                            customTowerCost = 0;
+                        }
+                        else
+                        {
+                            customRadIncrease -= 1;
+                            customRad -= 25;
+                            customTowerCost -= 75;
+                        }
+                    }
+                    if(attackSpdPlus.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && customRadIncrease <= 6 && KeyMouseReader.LeftClick())
+                    {
+                        customAttackSpd -= 15;
+                        customTowerCost += 100;
+                        customRadIncrease += 1;
+                    } 
+                    if(attackSpdMinus.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                    {
+                        if (customAttackSpd >= 275)
+                        {
+                            customAttackSpd = 275;
+                        }
+                        else
+                        {
+                            customRadIncrease -= 1;
+                            customAttackSpd += 15;
+                            customTowerCost -= 100;
+                        }
+                    }
 
-                    //DrawOnRenderTarget();
+                    rangeRect = new Rectangle((int)customSelected.pos.X, (int)customSelected.pos.Y, customRad * 2 - SpriteManager.RangeRing.Width, customRad* 2 - SpriteManager.RangeRing.Height);
+                    if (KeyMouseReader.KeyPressed(Keys.Enter))
+                    {
+                        currentGameState = GameState.Game;
+                    }
+                    if (KeyMouseReader.KeyPressed(Keys.Back))
+                    {
+                        currentGameState = GameState.MainMenu;
+                    }
+                    break;
+
+                case GameState.Game:
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
+                        Exit();
                     if (!isPaused)
                     {
                         GameUpdate(gameTime);
@@ -236,10 +326,14 @@ namespace TowerDefence
                     }
                     break;
                 case GameState.GameOver:
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
+                        Exit();
                     MediaPlayer.Stop();
                     KeyMouseReader.Update();
                     break;
                 case GameState.Win:
+                    if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Back))
+                        Exit();
                     MediaPlayer.Stop();
                     KeyMouseReader.Update();
                     startUpdateOneBar += gameTime.ElapsedGameTime.TotalSeconds;
@@ -415,7 +509,28 @@ namespace TowerDefence
                     GameDraw(gameTime);             
                     break;
                 case GameState.MainMenu:
-                    MainMenuDraw(gameTime);      
+                    MainMenuDraw(gameTime);
+                   
+                    break;
+                case GameState.MapCreate:
+                    SplineManager.simplePath.Draw(_spriteBatch);
+                    SplineManager.simplePath.DrawPoints(_spriteBatch);
+
+                    break;
+                case GameState.TowerCreate:
+                    GraphicsDevice.Clear(settingsColor);
+                    customSelected.Draw(_spriteBatch);
+
+                    _spriteBatch.Draw(SpriteManager.RangeRing, rangeRect, null, Color.Red, 0f, new Vector2(customSelected.texture.Width / 4, customSelected.texture.Height / 4+2 ), SpriteEffects.None, 1f);
+                    _spriteBatch.DrawString(score_Font, "$" + customTowerCost, new Vector2(620, 550), Color.Gold);
+                    _spriteBatch.DrawString(score_Font, "Attack Speed: " + customAttackSpd, new Vector2(620, 600), Color.Gold);
+                    _spriteBatch.Draw(SpriteManager.RangePlusTex, rangePlusRect, Color.White);
+                    _spriteBatch.Draw(SpriteManager.RangeMinusTex, rangeMinusRect, Color.White);
+                    _spriteBatch.Draw(SpriteManager.AttackSpdPlusTex, attackSpdPlus, Color.White);
+                    _spriteBatch.Draw(SpriteManager.AttackSpdMinusTex, attackSpdMinus, Color.White);
+
+
+
                     break;
                 case GameState.Pause:
                     GameDraw(gameTime);
@@ -451,7 +566,9 @@ namespace TowerDefence
         }
         public void MainMenuDraw(GameTime gameTime)
         {
-           
+          
+       
+
         }
         public void GameDraw(GameTime gameTime)
         {          
