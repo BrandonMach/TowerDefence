@@ -103,6 +103,10 @@ namespace TowerDefence
         double startParticles = 0;
         double particlesDuration = 0.25;
         public static int lives;
+        private Rectangle gameLogoRect;
+        private Rectangle mapMakerRect;
+        private Rectangle customTowerRect;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -140,7 +144,7 @@ namespace TowerDefence
             currentTowerSelected = TowerSelect.None;
             myForm1 = new NameMenu();
 
-            SplineManager.LoadSpline(GraphicsDevice, Window/*, true*/);
+            SplineManager.LoadSpline(GraphicsDevice, Window);
             avastSelected = new AvastTower(SpriteManager.AvastTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.AvastTex.Width, SpriteManager.AvastTex.Height), 150, 0,2);
             nordVPNSelected = new NordVPNTower(SpriteManager.NordVPNTex, Vector2.Zero, new Rectangle(0,0, SpriteManager.NordVPNTex.Width, SpriteManager.NordVPNTex.Height), 250, 0,5);
             customSelected=  new CustomTower(SpriteManager.CustomTowerTex, new Vector2(400,400), new Rectangle(0,0, SpriteManager.CustomTowerTex.Width, SpriteManager.CustomTowerTex.Height), customRad, 0, customAttackSpd);
@@ -178,9 +182,7 @@ namespace TowerDefence
         }
 
         protected override void Update(GameTime gameTime)
-        {
-           
-            
+        {   
             switch (currentGameState)
             { 
                 case GameState.StartMenu:
@@ -198,13 +200,21 @@ namespace TowerDefence
                     break;
                 case GameState.MainMenu:
                     KeyMouseReader.Update();
-                    if (KeyMouseReader.KeyPressed(Keys.P))
+                    gameLogoRect = new Rectangle(480, 220, SpriteManager.GameIconTex.Width +30, SpriteManager.GameIconTex.Height + 30);
+                    mapMakerRect = new Rectangle(800,300 , SpriteManager.MapManagerTex.Width, SpriteManager.MapManagerTex.Height);
+                    customTowerRect = new Rectangle(800,300 + SpriteManager.MapManagerTex.Height + 10, SpriteManager.MapManagerTex.Width, SpriteManager.MapManagerTex.Height);
+
+                    if (mapMakerRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                     {
                         currentGameState = GameState.MapCreate;
                     }
-                    if (KeyMouseReader.KeyPressed(Keys.O))
+                    if (customTowerRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
                     {
                         currentGameState = GameState.TowerCreate;
+                    }
+                    if (gameLogoRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
+                    {
+                        currentGameState = GameState.Game;
                     }
 
                     break;
@@ -235,10 +245,7 @@ namespace TowerDefence
                             SplineManager.simplePath.SetPos(pointToMoveIndex, new Vector2(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y));
                         }
                     }
-                    if (KeyMouseReader.KeyPressed(Keys.Enter))
-                    {                        
-                        currentGameState = GameState.Game;
-                    }
+                    
                     if (KeyMouseReader.KeyPressed(Keys.Back))
                     {
                         currentGameState = GameState.MainMenu;
@@ -274,7 +281,7 @@ namespace TowerDefence
                     if(attackSpdPlus.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && customRadIncrease <= 6 && KeyMouseReader.LeftClick())
                     {
                         customAttackSpd -= 15;
-                        customTowerCost += 100;
+                        customTowerCost += 75;
                         customRadIncrease += 1;
                     } 
                     if(attackSpdMinus.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y) && KeyMouseReader.LeftClick())
@@ -287,15 +294,11 @@ namespace TowerDefence
                         {
                             customRadIncrease -= 1;
                             customAttackSpd += 15;
-                            customTowerCost -= 100;
+                            customTowerCost -= 75;
                         }
                     }
 
                     rangeRect = new Rectangle((int)customSelected.pos.X, (int)customSelected.pos.Y, customRad * 2 - SpriteManager.RangeRing.Width, customRad* 2 - SpriteManager.RangeRing.Height);
-                    if (KeyMouseReader.KeyPressed(Keys.Enter))
-                    {
-                        currentGameState = GameState.Game;
-                    }
                     if (KeyMouseReader.KeyPressed(Keys.Back))
                     {
                         currentGameState = GameState.MainMenu;
@@ -509,8 +512,17 @@ namespace TowerDefence
                     GameDraw(gameTime);             
                     break;
                 case GameState.MainMenu:
-                    MainMenuDraw(gameTime);
-                   
+                    _spriteBatch.Draw(SpriteManager.MainMenuTex, new Rectangle(0,100, Window.ClientBounds.Width, Window.ClientBounds.Height -100), Color.White);
+                    _spriteBatch.Draw(SpriteManager.MapManagerTex, mapMakerRect, Color.White);
+                    _spriteBatch.Draw(SpriteManager.CustomTowerMakerTex, customTowerRect, Color.White);
+                    if(gameLogoRect.Contains(KeyMouseReader.mouseState.X, KeyMouseReader.mouseState.Y))
+                    {
+                        _spriteBatch.Draw(SpriteManager.GameIconTex, gameLogoRect, Color.Gray);
+                    }
+                    else
+                    {
+                        _spriteBatch.Draw(SpriteManager.GameIconTex, gameLogoRect, Color.White);
+                    }         
                     break;
                 case GameState.MapCreate:
                     SplineManager.simplePath.Draw(_spriteBatch);
@@ -563,12 +575,6 @@ namespace TowerDefence
             _spriteBatch.Draw(SpriteManager.Cursor, mousePosCursor, Color.White);
             _spriteBatch.End();
             base.Draw(gameTime);
-        }
-        public void MainMenuDraw(GameTime gameTime)
-        {
-          
-       
-
         }
         public void GameDraw(GameTime gameTime)
         {          

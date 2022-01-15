@@ -30,6 +30,8 @@ namespace TowerDefence
             public static Texture2D RangeMinusTex { get; private set; }
             public static Texture2D AttackSpdPlusTex { get; private set; }
             public static Texture2D AttackSpdMinusTex { get; private set; }
+            public static Texture2D MapManagerTex { get; private set; }
+            public static Texture2D CustomTowerMakerTex { get; private set; }
             public static Texture2D SnowFlakeTex { get; private set; }
             public static Texture2D AvastProjectile { get; private set; }
             public static Texture2D DollarSignParticle { get; private set; }
@@ -39,6 +41,8 @@ namespace TowerDefence
             public static Texture2D WinTex { get; private set; }
             public static Texture2D UpdateBar { get; private set; } 
             public static Texture2D HideBlock { get; private set; } 
+            public static Texture2D MainMenuTex { get; private set; } 
+            public static Texture2D GameIconTex { get; private set; } 
             public static Song StartUpTheme { get; private set; }
             public static Song MainTheme { get; private set; }
             public static SoundEffect PlacingSound { get; private set; }
@@ -67,6 +71,8 @@ namespace TowerDefence
                 RangeMinusTex = Content.Load <Texture2D>("RangeMinus");
                 AttackSpdPlusTex = Content.Load <Texture2D>("attckSpeedPlus");
                 AttackSpdMinusTex = Content.Load <Texture2D>("attckSpeedMinus");
+                MapManagerTex = Content.Load<Texture2D>("MapManagerButton");
+                CustomTowerMakerTex = Content.Load<Texture2D>("CustomTowerButton");
                 DollarSignParticle = Content.Load<Texture2D>("DollarSign");
                 Cursor = Content.Load<Texture2D>("fingerCursor");
                 Heart = Content.Load<Texture2D>("marioHeart");
@@ -74,6 +80,8 @@ namespace TowerDefence
                 WinTex = Content.Load<Texture2D>("Updating");
                 UpdateBar = Content.Load<Texture2D>("UpdateBar");
                 HideBlock = Content.Load<Texture2D>("WhiteBlock");
+                MainMenuTex = Content.Load<Texture2D>("MainMenuTex");
+                GameIconTex = Content.Load<Texture2D>("GameLogo");
                 StartUpTheme = Content.Load<Song>("Microsoft Windows 95");
                 MainTheme = Content.Load<Song>("Microsoft Windows 95 Passport");
                 PlacingSound = Content.Load<SoundEffect>("PlacingSound");
